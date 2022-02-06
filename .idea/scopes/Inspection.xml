@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Inspection" pattern="file[CBN-Tilecov.main]:*/||file[CBN-Tilecov.test]:*/||file[CBN-Tilecov]:settings.gradle||file[CBN-Tilecov]:build.gradle" />
+</component>
