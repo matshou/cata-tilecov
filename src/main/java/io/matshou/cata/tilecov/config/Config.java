@@ -54,8 +54,8 @@ public class Config {
      *
      * @param properties properties to validate.
      *
-     * @throws MissingConfigProperty when any property entry is missing.
-     * @throws IllegalConfigProperty when any non-optional property is empty.
+     * @throws MissingConfigPropertyException when any property entry is missing.
+     * @throws IllegalConfigPropertyException when any non-optional property is empty.
      */
     @Contract(pure = true)
     private static void validate(Properties properties) throws ConfigPropertyException {
@@ -65,10 +65,10 @@ public class Config {
             if (!entry.optional) {
                 Object obj = properties.get(entry.name);
                 if (obj == null) {
-                    throw new MissingConfigProperty(entry.name);
+                    throw new MissingConfigPropertyException(entry.name);
                 }
                 else if (((String) obj).isEmpty()) {
-                    throw new IllegalConfigProperty(entry, "property is not optional");
+                    throw new IllegalConfigPropertyException(entry, "property is not optional");
                 }
             }
         }

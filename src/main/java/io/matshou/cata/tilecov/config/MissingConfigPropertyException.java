@@ -1,8 +1,8 @@
 package io.matshou.cata.tilecov.config;
 
-public class MissingConfigProperty extends RuntimeException {
+public class MissingConfigPropertyException extends RuntimeException {
 
-    MissingConfigProperty(String property) {
+    MissingConfigPropertyException(String property) {
         super(String.format("%s: property not defined in config file.", property));
     }
 }
