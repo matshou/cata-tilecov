@@ -1,10 +1,10 @@
 package io.matshou.cata.tilecov.config;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -29,8 +29,21 @@ public class ConfigTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenConfigFileMissing(@TempDir Path tempDir) {
-        assertThrows(FileNotFoundException.class, () -> Config.initialize(tempDir));
+    void shouldCreateConfigFileWhenMissing(@TempDir Path tempDir) throws IOException {
+
+        assertDoesNotThrow(() -> Config.initialize(tempDir));
+        File configFile = tempDir.resolve(Config.FILENAME).toFile();
+        assertTrue(configFile.exists());
+
+        java.util.List<String> expected = new ArrayList<>();
+        for (Config.Entry entry : Config.Entry.values()) {
+            expected.add(entry.name + '=' + entry.defaultValue);
+        }
+        java.util.List<String> actual = Files.readLines(configFile, Charset.defaultCharset());
+        assertEquals(expected.size(), actual.size());
+        for (int i = 0; i < actual.size(); ++i) {
+            assertEquals(expected.get(i), actual.get(i));
+        }
     }
 
     @Test

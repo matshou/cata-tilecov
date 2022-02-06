@@ -1,6 +1,7 @@
 package io.matshou.cata.tilecov.config;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -11,6 +12,8 @@ import java.util.function.Function;
 import org.jetbrains.annotations.Contract;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.io.CharSink;
+import com.google.common.io.Files;
 
 /**
  * This class represents application configuration file.
@@ -83,22 +86,29 @@ public class Config {
     }
 
     /**
-     * Initialize the configuration file.
+     * Initialize the configuration file in a directory with given path.
      *
-     * @throws IOException when config file was not found or there was an error loading Properties.
+     * @param configDir path to directory where the config file resides.
+     *
+     * @throws IOException when there was an error creating config file or loading properties.
      * @throws ConfigPropertyException when any property has failed validation.
      * @see #initialize()
      */
     static void initialize(Path configDir) throws IOException, ConfigPropertyException {
 
-        Path configPath = configDir.resolve(FILENAME);
-        if (!configPath.toFile().exists()) {
-            String absolutePath = configPath.toAbsolutePath().toString();
-            throw new FileNotFoundException("Unable to find config file: " + absolutePath);
+        File configFile = configDir.resolve(FILENAME).toFile();
+        if (!configFile.exists()) {
+            if (!configFile.createNewFile()) {
+                throw new IOException("Unable to create config file: " + configFile.getPath());
+            }
+            CharSink sink = Files.asCharSink(configFile, Charset.defaultCharset());
+            for (Entry entry : Entry.values()) {
+                sink.write(entry.name + '=' + entry.defaultValue);
+            }
         }
         // load configuration file from the path
         final Properties propertiesFromFile = new Properties();
-        try (FileReader stream = new FileReader(configPath.toFile())) {
+        try (FileReader stream = new FileReader(configFile)) {
             propertiesFromFile.load(stream);
         }
         // validate all property entries
@@ -115,13 +125,16 @@ public class Config {
     }
 
     /**
-     * Initialize the configuration file.
+     * Initialize the configuration file in application root directory.
+     * <p>
+     * If the configuration file in the given directory does not exist
+     * the config property file will be created with default property values.
      * <p>
      * All property entries that match {@link Entry} name values will be validated,
      * converted to their intended class object types and stored in immutable map.
      * Other property entries will be ignored.
      *
-     * @throws IOException when config file was not found or there was an error loading Properties.
+     * @throws IOException when there was an error creating config file or loading properties.
      * @throws ConfigPropertyException when any property has failed validation.
      */
     public static void initialize() throws IOException {
