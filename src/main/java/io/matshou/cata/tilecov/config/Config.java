@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Contract;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.CharSink;
 import com.google.common.io.Files;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This class represents application configuration file.
@@ -154,11 +155,11 @@ public class Config {
      * @param name Name of the property to get.
      * @param type Class of expected property type.
      * @param <T> expected property type.
-     * @return the found property cast to {@code T}.
+     * @return the found property cast to {@code T} or {@code null} if no property was found.
      * @throws ClassCastException if the found property is not assignable to {@code T}.
      */
     @Contract(pure = true)
-    public static <T> T getProperty(String name, Class<T> type) {
+    public static @Nullable <T> T getProperty(String name, Class<T> type) {
 
         Object property = properties.get(name);
         return property != null ? type.cast(property) : null;
