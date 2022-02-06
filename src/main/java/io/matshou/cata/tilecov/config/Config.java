@@ -105,7 +105,8 @@ public class Config {
         // the entries will be stored as proper types in an immutable map
         Map<String, Object> tmpProperties = new HashMap<>();
         for (Entry entry : Entry.values()) {
-            tmpProperties.put(entry.name, entry.type.apply(entry.name));
+            String propertyValue = (String) propertiesFromFile.get(entry.name);
+            tmpProperties.put(entry.name, entry.type.apply(propertyValue));
         }
         properties = ImmutableMap.copyOf(tmpProperties);
     }
