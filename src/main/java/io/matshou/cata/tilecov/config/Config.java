@@ -30,7 +30,7 @@ public class Config {
 
     enum Entry {
 
-        GAME_DIR("GAME_DIR", ".", false, p ->
+        GAME_DIR("GAME_DIR", ".", p ->
         {
             File gameDir = Paths.get(p).toFile();
             if (!gameDir.exists()) {
@@ -42,16 +42,18 @@ public class Config {
                 throw new IllegalConfigPropertyException("GAME_DIR", String.format(message, p));
             }
             return gameDir;
-        });
+        }, "Path to Cataclysm game directory", false);
 
         final String name;
         final String defaultValue;
+        final String comment;
         final boolean optional;
         final Function<String, ?> type;
 
-        Entry(String name, String defaultValue, boolean optional, Function<String, ?> type) {
+        Entry(String name, String defaultValue, Function<String, ?> type, String comment, boolean optional) {
             this.name = name;
             this.defaultValue = defaultValue;
+            this.comment = comment;
             this.optional = optional;
             this.type = type;
         }
@@ -101,10 +103,15 @@ public class Config {
             if (!configFile.createNewFile()) {
                 throw new IOException("Unable to create config file: " + configFile.getPath());
             }
+            StringBuilder sb = new StringBuilder();
             CharSink sink = Files.asCharSink(configFile, Charset.defaultCharset());
             for (Entry entry : Entry.values()) {
-                sink.write(entry.name + '=' + entry.defaultValue);
+                if (!entry.comment.isEmpty()) {
+                    sb.append("# ").append(entry.comment).append('\n');
+                }
+                sb.append(entry.name).append('=').append(entry.defaultValue).append('\n');
             }
+            sink.write(sb.toString());
         }
         // load configuration file from the path
         final Properties propertiesFromFile = new Properties();

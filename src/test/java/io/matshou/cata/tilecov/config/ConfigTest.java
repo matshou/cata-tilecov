@@ -37,6 +37,9 @@ public class ConfigTest {
 
         java.util.List<String> expected = new ArrayList<>();
         for (Config.Entry entry : Config.Entry.values()) {
+            if (!entry.comment.isEmpty()) {
+                expected.add("# " + entry.comment);
+            }
             expected.add(entry.name + '=' + entry.defaultValue);
         }
         java.util.List<String> actual = Files.readLines(configFile, Charset.defaultCharset());
