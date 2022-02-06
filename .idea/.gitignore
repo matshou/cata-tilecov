@@ -1,0 +1,14 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+
+# Sensitive or high-churn files
+/jarRepositories.xml
+/uiDesigner.xml
+/misc.xml
+
+# IDEA plugins
+/discord.xml
+
+# Gradle
+/gradle.xml
