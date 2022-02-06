@@ -19,8 +19,11 @@ import com.google.common.collect.ImmutableMap;
  */
 public class Config {
 
-    private static final String FILENAME = "tilecov.ini";
-    private static ImmutableMap<String, Object> properties;
+    // configuration filename
+    static final String FILENAME = "tilecov.ini";
+
+    // map of configuration properties
+    static ImmutableMap<String, Object> properties;
 
     enum Entry {
 
@@ -87,7 +90,7 @@ public class Config {
         }
         // load configuration file from the path
         final Properties propertiesFromFile = new Properties();
-        try(FileReader stream = new FileReader(FILENAME)) {
+        try (FileReader stream = new FileReader(FILENAME)) {
             propertiesFromFile.load(stream);
         }
         // validate all property entries
@@ -96,7 +99,7 @@ public class Config {
         // Convert and store all entries to intended class object types
         // the entries will be stored as proper types in an immutable map
         Map<String, Object> tmpProperties = new HashMap<>();
-        for(Entry entry : Entry.values()) {
+        for (Entry entry : Entry.values()) {
             tmpProperties.put(entry.name, entry.type.apply(entry.name));
         }
         properties = ImmutableMap.copyOf(tmpProperties);
@@ -109,7 +112,6 @@ public class Config {
      * @param type Class of expected property type.
      * @param <T> expected property type.
      * @return the found property cast to {@code T}.
-     *
      * @throws ClassCastException if the found property is not assignable to {@code T}.
      */
     @Contract(pure = true)
