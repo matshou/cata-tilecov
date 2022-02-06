@@ -1,0 +1,6 @@
+# Autodetect text files and normalise their line endings to LF
+* text=auto
+
+# These files are text and should be normalized
+.gitattributes text
+.gitignore text
