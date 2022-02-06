@@ -27,10 +27,16 @@ public class Config {
 
     enum Entry {
 
-        GAME_DIR("GAME_DIR", ".", false, p -> {
+        GAME_DIR("GAME_DIR", ".", false, p ->
+        {
             File gameDir = Paths.get(p).toFile();
             if (!gameDir.exists()) {
-                throw new RuntimeException(String.format("Game directory not found: %s", p));
+                String message = "directory not found (%s)";
+                throw new IllegalConfigPropertyException("GAME_DIR", String.format(message, p));
+            }
+            if (!gameDir.isDirectory()) {
+                String message = "path is not a directory (%s)";
+                throw new IllegalConfigPropertyException("GAME_DIR", String.format(message, p));
             }
             return gameDir;
         });
