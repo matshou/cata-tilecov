@@ -27,7 +27,7 @@ public class Config {
 
     enum Entry {
 
-        GAME_DIR("GAME_DIR", false, p -> {
+        GAME_DIR("GAME_DIR", ".", false, p -> {
             File gameDir = Paths.get(p).toFile();
             if (!gameDir.exists()) {
                 throw new RuntimeException(String.format("Game directory not found: %s", p));
@@ -36,11 +36,13 @@ public class Config {
         });
 
         final String name;
+        final String defaultValue;
         final boolean optional;
         final Function<String, ?> type;
 
-        Entry(String name, boolean optional, Function<String, ?> type) {
+        Entry(String name, String defaultValue, boolean optional, Function<String, ?> type) {
             this.name = name;
+            this.defaultValue = defaultValue;
             this.optional = optional;
             this.type = type;
         }
