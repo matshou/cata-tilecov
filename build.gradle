@@ -1,0 +1,39 @@
+plugins {
+    // Add Java compilation, testing, bundling and other capabilities
+    // https://docs.gradle.org/current/userguide/java_plugin.html
+    id 'java'
+
+    // Facilitates creating an executable JVM application
+    // https://docs.gradle.org/current/userguide/application_plugin.html
+    id 'application'
+
+    // Plugin that keeps your code spotless with Gradle
+    // https://plugins.gradle.org/plugin/com.diffplug.spotless
+    id "com.diffplug.spotless" version "6.2.1"
+}
+apply plugin: 'com.diffplug.spotless'
+// personal spotless formatting rules for Java projects
+apply from: "https://gist.githubusercontent.com/matshou/${spotlessGistID}/raw/spotless.gradle"
+
+repositories {
+    mavenCentral()
+}
+
+application {
+    mainClass = 'io.matshou.cata.tilecov.Main'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(16)
+        vendor = JvmVendorSpec.ADOPTOPENJDK
+    }
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    implementation group: 'com.google.guava', name: 'guava', version: '31.0.1-jre'
+
+    // https://mvnrepository.com/artifact/org.jetbrains/annotations
+    implementation 'org.jetbrains:annotations:23.0.0'
+}
