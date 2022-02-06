@@ -12,3 +12,6 @@
 
 # Gradle
 /gradle.xml
+
+# Other
+codeStyles/*
