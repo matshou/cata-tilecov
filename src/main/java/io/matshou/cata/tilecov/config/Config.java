@@ -55,7 +55,6 @@ public class Config {
      * Other property entries will be ignored.
      *
      * @param properties properties to validate.
-     *
      * @throws MissingConfigPropertyException when any property entry is missing.
      * @throws IllegalConfigPropertyException when any non-optional property is empty.
      */
@@ -78,24 +77,21 @@ public class Config {
 
     /**
      * Initialize the configuration file.
-     * <p>
-     * All property entries that match {@link Entry} name values will be validated,
-     * converted to their intended class object types and stored in immutable map.
-     * Other property entries will be ignored.
      *
      * @throws IOException when config file was not found or there was an error loading Properties.
      * @throws ConfigPropertyException when any property has failed validation.
+     * @see #initialize()
      */
-    public static void initialize() throws IOException, ConfigPropertyException {
+    static void initialize(Path configDir) throws IOException, ConfigPropertyException {
 
-        Path configPath = Paths.get(FILENAME);
+        Path configPath = configDir.resolve(FILENAME);
         if (!configPath.toFile().exists()) {
             String absolutePath = configPath.toAbsolutePath().toString();
             throw new FileNotFoundException("Unable to find config file: " + absolutePath);
         }
         // load configuration file from the path
         final Properties propertiesFromFile = new Properties();
-        try (FileReader stream = new FileReader(FILENAME)) {
+        try (FileReader stream = new FileReader(configPath.toFile())) {
             propertiesFromFile.load(stream);
         }
         // validate all property entries
@@ -109,6 +105,20 @@ public class Config {
             tmpProperties.put(entry.name, entry.type.apply(propertyValue));
         }
         properties = ImmutableMap.copyOf(tmpProperties);
+    }
+
+    /**
+     * Initialize the configuration file.
+     * <p>
+     * All property entries that match {@link Entry} name values will be validated,
+     * converted to their intended class object types and stored in immutable map.
+     * Other property entries will be ignored.
+     *
+     * @throws IOException when config file was not found or there was an error loading Properties.
+     * @throws ConfigPropertyException when any property has failed validation.
+     */
+    public static void initialize() throws IOException {
+        initialize(Paths.get("."));
     }
 
     /**
