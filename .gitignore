@@ -8,3 +8,6 @@ build
 modules.xml
 *.iml
 *.ipr
+
+# Application build files
+*.ini
