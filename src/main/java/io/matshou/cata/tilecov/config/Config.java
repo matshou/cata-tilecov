@@ -61,6 +61,7 @@ public class Config {
      * Other property entries will be ignored.
      *
      * @param properties properties to validate.
+     *
      * @throws MissingConfigPropertyException when any property entry is missing.
      * @throws IllegalConfigPropertyException when any non-optional property is empty.
      */
