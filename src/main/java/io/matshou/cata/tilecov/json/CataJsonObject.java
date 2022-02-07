@@ -8,11 +8,11 @@ import com.google.gson.annotations.SerializedName;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * This class represents Cataclysm JSON data structure for objects that can have tiles.
+ * This class represents Cataclysm JSON object data structure for objects that can have tiles.
  * Information here is needed to generate tile coverage metrics.
  */
 @SuppressWarnings("unused")
-public class CataJsonData {
+public class CataJsonObject {
 
     private @Nullable String type, id, name, description;
 

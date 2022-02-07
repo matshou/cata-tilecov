@@ -11,13 +11,13 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 /**
- * This class represents a custom deserializer for {@link CataJsonData} class.
+ * This class represents a custom deserializer for {@link CataJsonObject} class.
  */
-public class CataJsonDeserializer implements JsonDeserializer<CataJsonData> {
+public class CataJsonDeserializer implements JsonDeserializer<CataJsonObject> {
 
     /**
      * Names that represent JSON properties that can be both strings and array of strings.
-     * these cases are handled in {@link #deserializeArray(Gson, JsonObject, CataJsonData, String)}
+     * these cases are handled in {@link #deserializeArray(Gson, JsonObject, CataJsonObject, String)}
      */
     private static final String[] ARRAY_ENTRIES = { "color", "bgcolor" };
 
@@ -29,9 +29,9 @@ public class CataJsonDeserializer implements JsonDeserializer<CataJsonData> {
      * @param value new value the field will have.
      */
     @Contract(mutates = "param1")
-    private void setCataJsonDataField(CataJsonData instance, String name, Object value) {
+    private void setCataJsonDataField(CataJsonObject instance, String name, Object value) {
 
-        for (Field field : CataJsonData.class.getDeclaredFields()) {
+        for (Field field : CataJsonObject.class.getDeclaredFields()) {
             SerializedName[] annotations = field.getAnnotationsByType(SerializedName.class);
             boolean annotationMatch = annotations.length > 0 && annotations[0].value().equals(name);
             if (!field.getName().equals(name) && !annotationMatch) {
@@ -52,36 +52,36 @@ public class CataJsonDeserializer implements JsonDeserializer<CataJsonData> {
      *
      * @param gson {@code GSon} used in deserializing.
      * @param jsonObject object to search for given entry element.
-     * @param cataJData target of array deserialization.
+     * @param cataJsonObject target of array deserialization.
      * @param entry name of the json element to deserialize.
      */
     @Contract(mutates = "param3")
-    private void deserializeArray(Gson gson, JsonObject jsonObject, CataJsonData cataJData, String entry) {
+    private void deserializeArray(Gson gson, JsonObject jsonObject, CataJsonObject cataJsonObject, String entry) {
 
         JsonElement element = jsonObject.get(entry);
         if (element != null) {
             if (!element.isJsonArray()) {
                 String result = gson.fromJson(element, String.class);
-                setCataJsonDataField(cataJData, entry, List.of(result));
+                setCataJsonDataField(cataJsonObject, entry, List.of(result));
             }
             else {
                 List<String> result = gson.fromJson(element, new TypeToken<>() {}.getType());
-                setCataJsonDataField(cataJData, entry, result);
+                setCataJsonDataField(cataJsonObject, entry, result);
             }
         }
     }
 
     @Override
-    public CataJsonData deserialize(JsonElement arg0, Type arg1, JsonDeserializationContext arg2) throws JsonParseException {
+    public CataJsonObject deserialize(JsonElement arg0, Type arg1, JsonDeserializationContext arg2) throws JsonParseException {
 
         Gson gson = new Gson();
         JsonObject jsonObject = arg0.getAsJsonObject();
-        CataJsonData cataJData = gson.fromJson(arg0, CataJsonData.class);
+        CataJsonObject cataJsonObject = gson.fromJson(arg0, CataJsonObject.class);
 
         // handle json properties that can be both string and array of string
         for (String entry : ARRAY_ENTRIES) {
-            deserializeArray(gson, jsonObject, cataJData, entry);
+            deserializeArray(gson, jsonObject, cataJsonObject, entry);
         }
-        return cataJData;
+        return cataJsonObject;
     }
 }
