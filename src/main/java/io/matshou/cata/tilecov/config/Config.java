@@ -10,11 +10,11 @@ import java.util.Properties;
 import java.util.function.Function;
 
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.CharSink;
 import com.google.common.io.Files;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * This class represents application configuration file.
