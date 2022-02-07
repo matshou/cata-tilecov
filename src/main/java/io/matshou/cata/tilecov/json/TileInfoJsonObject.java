@@ -45,6 +45,6 @@ public class TileInfoJsonObject {
      * @throws NumberFormatException if the value it not a parsable integer.
      */
     public int getPixelScale() {
-        return pixelscale != null ? Integer.parseInt(pixelscale) : 2;
+        return pixelscale != null ? Integer.parseInt(pixelscale) : 1;
     }
 }
