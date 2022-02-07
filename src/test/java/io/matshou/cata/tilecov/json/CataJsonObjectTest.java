@@ -1,7 +1,6 @@
 package io.matshou.cata.tilecov.json;
 
-import java.io.*;
-import java.nio.file.Path;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,33 +10,20 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 public class CataJsonObjectTest {
 
-    private static List<CataJsonObject> buildCataJsonObjects(Path path, boolean deserializer) throws IOException {
-
-        InputStream stream = CataJsonObjectTest.class.getResourceAsStream('/' + path.toString());
-        Assertions.assertNotNull(stream);
-
-        try (Reader reader = new BufferedReader(new InputStreamReader(stream))) {
-            GsonBuilder builder = new GsonBuilder();
-            if (deserializer) {
-                builder.registerTypeAdapter(CataJsonObject.class, new CataJsonDeserializer());
-            }
-            // convert JSON array to list of users
-            TypeToken<List<CataJsonObject>> token = new TypeToken<>() {};
-            return builder.create().fromJson(reader, token.getType());
-        }
-    }
-
     @Test
     void shouldDeserializeProperties() throws IOException {
 
-        Path jsonPath = Paths.get("furniture.json");
-        List<CataJsonObject> furnitureJsonObjects = buildCataJsonObjects(jsonPath, true);
-        Assertions.assertEquals(4, furnitureJsonObjects.size());
+        List<CataJsonObject> jsonObjects = JsonObjectBuilder.<CataJsonObject>create()
+                .ofType(CataJsonObject.class)
+                .withTypeToken(new TypeToken<>() {})
+                .withDeserializer(CataJsonDeserializer.class)
+                .build(Paths.get("furniture.json"));
+
+        Assertions.assertEquals(4, jsonObjects.size());
 
         String[] expectedValues = {
                 "furniture", "", "-", "-",
@@ -48,7 +34,7 @@ public class CataJsonObjectTest {
                 "furniture", "f_floor_lamp_on", "floor lamp (on)",
                 "A tall standing lamp, plugged into a wall."
         };
-        Iterator<CataJsonObject> iter = furnitureJsonObjects.iterator();
+        Iterator<CataJsonObject> iter = jsonObjects.iterator();
         for (int i = 0; i < 16; i += 4) {
             CataJsonObject cataJsonObject = iter.next();
 
@@ -69,9 +55,13 @@ public class CataJsonObjectTest {
     @Test
     void shouldDeserializeAnnotatedProperties() throws IOException {
 
-        Path jsonPath = Paths.get("furniture.json");
-        List<CataJsonObject> furnitureJsonObjects = buildCataJsonObjects(jsonPath, true);
-        Assertions.assertEquals(4, furnitureJsonObjects.size());
+        List<CataJsonObject> jsonObjects = JsonObjectBuilder.<CataJsonObject>create()
+                .ofType(CataJsonObject.class)
+                .withTypeToken(new TypeToken<>() {})
+                .withDeserializer(CataJsonDeserializer.class)
+                .build(Paths.get("furniture.json"));
+
+        Assertions.assertEquals(4, jsonObjects.size());
 
         String[] expectedValues = {
                 "", "",
@@ -79,7 +69,7 @@ public class CataJsonObjectTest {
                 "f_floor_lamp", "f_floor_lamp_base",
                 "f_floor_lamp", "f_floor_lamp_base"
         };
-        Iterator<CataJsonObject> iter = furnitureJsonObjects.iterator();
+        Iterator<CataJsonObject> iter = jsonObjects.iterator();
         for (int i = 0; i < 8; i += 2) {
             CataJsonObject cataJsonObject = iter.next();
 
@@ -94,8 +84,11 @@ public class CataJsonObjectTest {
     @Test
     void shouldDeserializeJsonArrays() throws IOException {
 
-        Path jsonPath = Paths.get("furniture.json");
-        List<CataJsonObject> furnitureJsonObjects = buildCataJsonObjects(jsonPath, true);
+        List<CataJsonObject> jsonObjects = JsonObjectBuilder.<CataJsonObject>create()
+                .ofType(CataJsonObject.class)
+                .withTypeToken(new TypeToken<>() {})
+                .withDeserializer(CataJsonDeserializer.class)
+                .build(Paths.get("furniture.json"));
 
         List<List<List<String>>> expected = ImmutableList.of(
                 List.of(List.of("light_gray"), List.of()),
@@ -104,7 +97,7 @@ public class CataJsonObjectTest {
                 List.of(List.of("yellow"), List.of(""))
         );
         for (int i = 0; i < expected.size(); ++i) {
-            CataJsonObject cataJsonObject = furnitureJsonObjects.get(i);
+            CataJsonObject cataJsonObject = jsonObjects.get(i);
             List<List<String>> entry = expected.get(i);
 
             List<String> expectedColors = entry.get(0);
@@ -123,8 +116,12 @@ public class CataJsonObjectTest {
     @Test
     void shouldFailToDeserializeJsonArraysWithoutAdapter() throws IOException {
 
-        Path jsonPath = Paths.get("furniture.json");
-        for (CataJsonObject cataJsonObject : buildCataJsonObjects(jsonPath, false)) {
+        List<CataJsonObject> jsonObjects = JsonObjectBuilder.<CataJsonObject>create()
+                .ofType(CataJsonObject.class)
+                .withTypeToken(new TypeToken<>() {})
+                .build(Paths.get("furniture.json"));
+
+        for (CataJsonObject cataJsonObject : jsonObjects) {
             Assertions.assertTrue(cataJsonObject.getForegroundColor().isEmpty());
             Assertions.assertTrue(cataJsonObject.getBackgroundColor().isEmpty());
         }
