@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -88,14 +89,9 @@ public class JsonObjectBuilderTest {
     @Test
     void shouldDeserializeSinglePropertyToClassObject() {
 
-        List<String> jsonInList = List.of(
-                "[",
-                "  {",
-                "    \"jsonProperty\": 1",
-                "  }",
-                "]"
+        String jsonString = JsonObjectTestHelper.createJsonString(
+                Map.of("jsonProperty", "1")
         );
-        String jsonString = String.join("", jsonInList);
         List<TestJsonObject> jsonObjects = JsonObjectBuilder.<TestJsonObject>create()
                 .ofType(TestJsonObject.class)
                 .withTypeToken(new TypeToken<>() {})
@@ -110,7 +106,9 @@ public class JsonObjectBuilderTest {
     @Test
     void shouldSupportCustomDeserializer() {
 
-        String jsonString = String.join("", List.of("[", "{", "}", "]"));
+        String jsonString = String.join("",
+                List.of("[", "{", "}", "]")
+        );
         List<TestJsonObject> jsonObjects = JsonObjectBuilder.<TestJsonObject>create()
                 .ofType(TestJsonObject.class)
                 .withTypeToken(new TypeToken<>() {})
