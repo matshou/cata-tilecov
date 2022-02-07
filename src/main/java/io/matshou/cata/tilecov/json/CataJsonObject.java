@@ -3,9 +3,10 @@ package io.matshou.cata.tilecov.json;
 import java.util.ArrayList;
 import java.util.Map;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.annotations.SerializedName;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * This class represents Cataclysm JSON object data structure for objects that can have tiles.
@@ -16,7 +17,11 @@ public class CataJsonObject {
 
     private @Nullable String type, id, name, description;
 
-    private @Nullable java.util.List<String> fgColor, bgColor;
+    @SerializedArrayName("color")
+    private @Nullable java.util.List<String> fgColor;
+
+    @SerializedArrayName("bgcolor")
+    private @Nullable java.util.List<String> bgColor;
 
     @SerializedName(value = "looks_like")
     private @Nullable String looksLike;

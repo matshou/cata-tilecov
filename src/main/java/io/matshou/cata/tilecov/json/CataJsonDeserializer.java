@@ -2,12 +2,14 @@ package io.matshou.cata.tilecov.json;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.jetbrains.annotations.Contract;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.*;
-import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 /**
@@ -16,34 +18,35 @@ import com.google.gson.reflect.TypeToken;
 public class CataJsonDeserializer implements JsonDeserializer<CataJsonObject> {
 
     /**
-     * Names that represent JSON properties that can be both strings and array of strings.
-     * these cases are handled in {@link #deserializeArray(Gson, JsonObject, CataJsonObject, String)}
-     */
-    private static final String[] ARRAY_ENTRIES = { "color", "bgcolor" };
-
-    /**
-     * Sets the class field in the instance with the given name to the specified value.
+     * Fields that point to JSON properties that can be both strings and array of strings
+     * mapped to JSON property keys we expect to find while parsing JSON.
      *
-     * @param instance instance of {@code CataJsonData} to change field in.
-     * @param name name of the field to change.
-     * @param value new value the field will have.
+     * @see #deserializeArray(Gson, JsonObject, CataJsonObject, String)
+     * @see SerializedArrayName
      */
-    @Contract(mutates = "param1")
-    private void setCataJsonDataField(CataJsonObject instance, String name, Object value) {
+    private static final ImmutableMap<String, Field> JSON_ARRAY_FIELDS;
 
+    static {
+        Map<String, Field> arrayFields = new java.util.HashMap<>();
         for (Field field : CataJsonObject.class.getDeclaredFields()) {
-            SerializedName[] annotations = field.getAnnotationsByType(SerializedName.class);
-            boolean annotationMatch = annotations.length > 0 && annotations[0].value().equals(name);
-            if (!field.getName().equals(name) && !annotationMatch) {
+            SerializedArrayName[] annotations = field.getAnnotationsByType(SerializedArrayName.class);
+            if (annotations.length == 0) {
                 continue;
             }
-            try {
-                field.set(instance, value);
+            arrayFields.put(annotations[0].value(), field);
+            if (!field.getType().equals(List.class)) {
+                String message = String.format(
+                        "Field %s in %s has invalid Class type (%s). Class types of " +
+                                "members annotated with %s needs to be of type java.util.List.",
+                        field.getName(), CataJsonObject.class.getSimpleName(),
+                        field.getType().getName(), SerializedArrayName.class.getSimpleName()
+                );
+                throw new IllegalStateException(message);
             }
-            catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
+            // make field accessible, so it can be changed by this class
+            field.setAccessible(true);
         }
+        JSON_ARRAY_FIELDS = ImmutableMap.copyOf(arrayFields);
     }
 
     /**
@@ -58,28 +61,34 @@ public class CataJsonDeserializer implements JsonDeserializer<CataJsonObject> {
     @Contract(mutates = "param3")
     private void deserializeArray(Gson gson, JsonObject jsonObject, CataJsonObject cataJsonObject, String entry) {
 
+        List<String> result = new ArrayList<>();
         JsonElement element = jsonObject.get(entry);
         if (element != null) {
             if (!element.isJsonArray()) {
-                String result = gson.fromJson(element, String.class);
-                setCataJsonDataField(cataJsonObject, entry, List.of(result));
+                result = List.of(gson.fromJson(element, String.class));
             }
-            else {
-                List<String> result = gson.fromJson(element, new TypeToken<>() {}.getType());
-                setCataJsonDataField(cataJsonObject, entry, result);
-            }
+            else result = gson.fromJson(element, new TypeToken<>() {}.getType());
+        }
+        try {
+            // no need to check for key presence, already checked by caller
+            //noinspection ConstantConditions
+            JSON_ARRAY_FIELDS.get(entry).set(cataJsonObject, result);
+        }
+        catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public CataJsonObject deserialize(JsonElement arg0, Type arg1, JsonDeserializationContext arg2) throws JsonParseException {
+    public CataJsonObject deserialize(JsonElement arg0, Type arg1,
+                                      JsonDeserializationContext arg2) throws JsonParseException {
 
         Gson gson = new Gson();
         JsonObject jsonObject = arg0.getAsJsonObject();
         CataJsonObject cataJsonObject = gson.fromJson(arg0, CataJsonObject.class);
 
         // handle json properties that can be both string and array of string
-        for (String entry : ARRAY_ENTRIES) {
+        for (String entry : JSON_ARRAY_FIELDS.keySet()) {
             deserializeArray(gson, jsonObject, cataJsonObject, entry);
         }
         return cataJsonObject;
