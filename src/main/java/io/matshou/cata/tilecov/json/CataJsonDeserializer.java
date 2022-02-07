@@ -80,12 +80,12 @@ public class CataJsonDeserializer implements JsonDeserializer<CataJsonObject> {
     }
 
     @Override
-    public CataJsonObject deserialize(JsonElement arg0, Type arg1,
-                                      JsonDeserializationContext arg2) throws JsonParseException {
+    public CataJsonObject deserialize(JsonElement json, Type type,
+                                      JsonDeserializationContext context) throws JsonParseException {
 
         Gson gson = new Gson();
-        JsonObject jsonObject = arg0.getAsJsonObject();
-        CataJsonObject cataJsonObject = gson.fromJson(arg0, CataJsonObject.class);
+        JsonObject jsonObject = json.getAsJsonObject();
+        CataJsonObject cataJsonObject = gson.fromJson(json, CataJsonObject.class);
 
         // handle json properties that can be both string and array of string
         for (String entry : JSON_ARRAY_FIELDS.keySet()) {
