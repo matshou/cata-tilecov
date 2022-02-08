@@ -47,50 +47,58 @@ public class CataJsonObject {
 
     /**
      * @return type of object such as furniture, terrain, item etc.
+     * or an empty string if type is not defined.
      */
     public String getType() {
         return type != null ? type : "";
     }
 
     /**
-     * @return id of the object, this will be unique among all objects of that type.
+     * @return id of the object, this will be unique among all objects of that type
+     * or an empty string if id is not defined.
      */
     public String getId() {
         return id != null ? id : "";
     }
 
     /**
-     * @return display name of the object.
+     * @return display name of the object or an empty string if name is not defined.
      */
     public String getName() {
         return name != null ? name : "";
     }
 
     /**
-     * @return in-game description of the object.
+     * @return in-game description of the object
+     * or an empty string if description is not defined.
      */
     public String getDescription() {
         return description != null ? description : "";
     }
 
     /**
-     * @return foreground color of the object as it appears in the game.
-     * This can be an array with 4 entries, each entry being the color during the different seasons.
+     * @return foreground color of the object as it appears in the game
+     * or an empty list if colors are not defined. The list should be expected
+     * to hold up to a maximum of 4 entries (one color for each calendar season).
      */
     public java.util.List<String> getForegroundColor() {
         return fgColor != null ? fgColor : new ArrayList<>();
     }
 
     /**
-     * @return solid background color of the object.
-     * This can be an array with 4 entries, each entry being the color during the different seasons.
+     * @return solid background color of the object
+     * or an empty list if colors are not defined. The list should be expected
+     * to hold up to a maximum of 4 entries (one color for each calendar season).
      */
     public java.util.List<String> getBackgroundColor() {
         return bgColor != null ? bgColor : new ArrayList<>();
     }
 
     /**
-     * Identification of a similar item that this item looks like. The tileset loader will try to load the tile
+     * Identification of a similar item that this item looks like
+     * or an empty string if this property is not defined.
+     * <p>
+     * The tileset loader will try to load the tile
      * for that item if this item doesn't have a tile. {@code looks_like} entries are implicitly chained, so if
      * {@code 'throne'} has {@code looks_like} {@code 'big_chair'} and {@code 'big_chair'} has {@code looks_like}
      * {code 'chair'}, a throne will be displayed using the chair tile if tiles for {@code throne} and
@@ -102,9 +110,11 @@ public class CataJsonObject {
     }
 
     /**
-     * Identification of an object to copy or inherit properties from. When this property is defined
-     * all properties of the specified object that are not defined in this object will be copied
-     * or inherited by the object that holds this property.
+     * Identification of an object to copy or inherit properties from
+     * or an empty string if this property is not defined.
+     * <p>
+     * When this property is defined all properties of the specified object that are not
+     * defined in this object will be copied or inherited by the object that holds this property.
      */
     public String copyFromWhat() {
         return copyFrom != null ? copyFrom : "";
