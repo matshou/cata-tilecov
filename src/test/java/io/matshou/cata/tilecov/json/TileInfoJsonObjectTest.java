@@ -55,24 +55,4 @@ public class TileInfoJsonObjectTest {
         Assertions.assertFalse(tileInfo.isIsometric());
         Assertions.assertEquals(1, tileInfo.getPixelScale());
     }
-
-    @Test
-    void shouldThrowExceptionWhenCallingGetterOnPropertyWithWrongFormat() {
-
-        String jsonString = JsonObjectTestHelper.createJsonString(Map.of(
-                "pixelscale", "true",
-                "width", "string",
-                "height", "string"
-        ));
-        List<TileInfoJsonObject> jsonObjects =
-                JsonObjectBuilder.<TileInfoJsonObject>create()
-                        .ofType(TileInfoJsonObject.class)
-                        .withTypeToken(new TypeToken<>() {})
-                        .build(jsonString);
-
-        TileInfoJsonObject jsonObject = jsonObjects.get(0);
-        Assertions.assertThrows(NumberFormatException.class, jsonObject::getPixelScale);
-        Assertions.assertThrows(NumberFormatException.class, jsonObject::getWidth);
-        Assertions.assertThrows(NumberFormatException.class, jsonObject::getHeight);
-    }
 }

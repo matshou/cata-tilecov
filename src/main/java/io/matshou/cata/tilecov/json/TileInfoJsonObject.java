@@ -1,7 +1,5 @@
 package io.matshou.cata.tilecov.json;
 
-import org.jetbrains.annotations.Nullable;
-
 /**
  * This object contains tileset metadata information.
  *
@@ -11,14 +9,15 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class TileInfoJsonObject {
 
-    private @Nullable String height, width, iso, pixelscale;
+    private int height, width, pixelscale;
+    private boolean iso;
 
     /**
      * @return width of each tile in this tileset.
      * @throws NumberFormatException if the value it not a parsable integer.
      */
     public int getWidth() {
-        return width != null && !width.isEmpty() ? Integer.parseInt(width) : 0;
+        return width;
     }
 
     /**
@@ -26,7 +25,7 @@ public class TileInfoJsonObject {
      * @throws NumberFormatException if the value it not a parsable integer.
      */
     public int getHeight() {
-        return height != null && !height.isEmpty() ? Integer.parseInt(height) : 0;
+        return height;
     }
 
     /**
@@ -35,7 +34,7 @@ public class TileInfoJsonObject {
      * @return whether this tileset is isometric. Default value is {@code false}.
      */
     public boolean isIsometric() {
-        return iso != null && !iso.isEmpty() && Boolean.parseBoolean(iso);
+        return iso;
     }
 
     /**
@@ -45,6 +44,6 @@ public class TileInfoJsonObject {
      * @throws NumberFormatException if the value it not a parsable integer.
      */
     public int getPixelScale() {
-        return pixelscale != null ? Integer.parseInt(pixelscale) : 1;
+        return pixelscale != 0 ? pixelscale : 1;
     }
 }
