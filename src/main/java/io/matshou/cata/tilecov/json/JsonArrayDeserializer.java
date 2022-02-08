@@ -26,7 +26,7 @@ abstract class JsonArrayDeserializer<T> implements JsonDeserializer<T> {
     /**
      * Class that represents an object using this deserializer.
      */
-    private final Class<T> jsonObjectClass;
+    final Class<T> jsonObjectClass;
 
     /**
      * Fields that point to JSON properties that can be both strings and array of strings
@@ -71,7 +71,7 @@ abstract class JsonArrayDeserializer<T> implements JsonDeserializer<T> {
      * @param entry name of the json element to deserialize.
      */
     @Contract(mutates = "param3")
-    private void deserializeArray(Gson gson, JsonObject jsonObject, T target, String entry) {
+    private void deserializeArrayMembers(Gson gson, JsonObject jsonObject, T target, String entry) {
 
         JsonElement element = jsonObject.get(entry);
         if (element != null) {
@@ -101,7 +101,7 @@ abstract class JsonArrayDeserializer<T> implements JsonDeserializer<T> {
 
         // handle json properties that can be both string and array of string
         for (String entry : jsonArrayFields.keySet()) {
-            deserializeArray(gson, jsonObject, targetObject, entry);
+            deserializeArrayMembers(gson, jsonObject, targetObject, entry);
         }
         return targetObject;
     }

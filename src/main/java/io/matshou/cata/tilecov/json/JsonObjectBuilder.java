@@ -116,7 +116,6 @@ public class JsonObjectBuilder<T> {
         if (typeToken == null) {
             throw new IllegalStateException("typeToken was not defined");
         }
-        // convert JSON array to list of users
         return builder.create().fromJson(jsonContent, typeToken.getType());
     }
 }
