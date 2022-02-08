@@ -77,7 +77,9 @@ public class JsonObjectBuilder<T> {
         try (Reader reader = new BufferedReader(new InputStreamReader(stream))) {
             GsonBuilder builder = new GsonBuilder();
             if (deserializer != null) {
-                builder.registerTypeAdapter(jsonObjectType, deserializer.getConstructor().newInstance());
+                // assume there is a single constructor with no arguments
+                Constructor<?> constructor = deserializer.getDeclaredConstructor();
+                builder.registerTypeAdapter(jsonObjectType, constructor.newInstance());
             }
             // convert JSON array to list of users
             return builder.create().fromJson(reader, typeToken.getType());
@@ -103,11 +105,8 @@ public class JsonObjectBuilder<T> {
                 throw new IllegalStateException("jsonObjectType was not defined");
             }
             try {
-                // get default non-parameter class constructor
-                // when not declared the default constructor should be inaccessible
-                Constructor<?> constructor = deserializer.getDeclaredConstructors()[0];
-                constructor.setAccessible(true);
-
+                // assume there is a single constructor with no arguments
+                Constructor<?> constructor = deserializer.getDeclaredConstructor();
                 builder.registerTypeAdapter(jsonObjectType, constructor.newInstance());
             }
             catch (ReflectiveOperationException e) {

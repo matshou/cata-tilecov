@@ -24,7 +24,7 @@ public class JsonObjectBuilderTest {
         private String pseudoProperty;
     }
 
-    private static class TestJsonObjectDeserializer implements JsonDeserializer<TestJsonObject> {
+    public static class TestJsonObjectDeserializer implements JsonDeserializer<TestJsonObject> {
 
         @Override
         public TestJsonObject deserialize(JsonElement json, Type type,
