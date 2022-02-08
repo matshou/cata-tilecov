@@ -14,3 +14,4 @@ modules.xml
 
 # Local project files
 local.properties
+/lib/*

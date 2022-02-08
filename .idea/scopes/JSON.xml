@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="JSON" pattern="file[CBN-Tilecov]:lib/json//*" />
+</component>

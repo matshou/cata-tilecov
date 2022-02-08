@@ -47,3 +47,13 @@ dependencies {
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
     implementation 'com.google.code.gson:gson:2.8.9'
 }
+
+if (project.ext.has('gameDir')) {
+    // external files cannot be effectively searched by IDEA
+    // so we need to copy these files inside the project root dir
+    task updateJsonLibrary(type: Sync) {
+        from "${gameDir}/data/json"
+        into './lib/json'
+        include '**/**/*.json'
+    }
+}
