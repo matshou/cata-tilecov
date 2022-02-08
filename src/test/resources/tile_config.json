@@ -1,0 +1,107 @@
+{
+  "tile_info": [
+    {
+      "height": 32,
+      "width": 32,
+      "iso" : true,
+      "pixelscale" : 2
+    }
+  ],
+  "tiles-new": [
+    {
+      "file": "tiles.png",
+      "tiles": [
+        {
+          "id": "10mm",
+          "fg": 1,
+          "bg": 632,
+          "rotates": false
+        },
+        {
+          "id": "t_wall",
+          "fg": [2918, 2919, 2918, 2919],
+          "bg": 633,
+          "rotates": true,
+          "multitile": true,
+          "additional_tiles": [
+            {
+              "id": "center",
+              "fg": [2919, 2918, 2919, 2918]
+            },
+            {
+              "id": "corner",
+              "fg": [2924, 2922, 2922, 2923]
+            },
+            {
+              "id": "end_piece",
+              "fg": [2918, 2919, 2918, 2919]
+            },
+            {
+              "id": "t_connection",
+              "fg": [2919, 2918, 2919, 2918]
+            },
+            {
+              "id": "unconnected",
+              "fg": 2235
+            }
+          ]
+        },
+        {
+          "id": "vp_atomic_lamp",
+          "fg": 3019,
+          "bg": 632,
+          "rotates": false,
+          "multitile": true,
+          "additional_tiles": [
+            {
+              "id": "broken",
+              "fg": 3021
+            }
+          ]
+        },
+        {
+          "id": "t_dirt",
+          "rotates": false,
+          "fg": [
+            { "weight":50, "sprite":640},
+            { "weight":1, "sprite":3620},
+            { "weight":1, "sprite":3621},
+            { "weight":1, "sprite":3622}
+          ]
+        },
+        {
+          "id": [
+            "overlay_mutation_GOURMAND",
+            "overlay_mutation_male_GOURMAND",
+            "overlay_mutation_active_GOURMAND"
+          ],
+          "fg": 4040
+        }
+      ]
+    },
+    {
+      "file": "moretiles.png",
+      "tiles": [
+        {
+          "id": ["xxx","yyy"],
+          "fg": 1,
+          "bg": 234
+        }
+      ]
+    }
+  ],
+  "overlay_ordering": [
+    {
+      "id" : "WINGS_BAT",
+      "order" : 1000
+    },
+    {
+      "id" : [ "PLANTSKIN", "BARK" ],
+      "order" : 3500
+    },
+    {
+      "id" : "bio_armor_torso",
+      "order" : 500
+    }
+  ]
+}
