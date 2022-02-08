@@ -7,14 +7,22 @@ public class JsonObjectTestHelper {
     static String createJsonString(Map<String, String> properties) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append('[').append('{');
+        sb.append("[\n\t{\n\t\t");
 
         for (Map.Entry<String, String> entry : properties.entrySet()) {
-            sb.append(entry.getKey()).append(": ").append(entry.getValue()).append(',');
+            String value = entry.getValue();
+            if (!value.startsWith("[") && !value.endsWith("]")) {
+                value = '\"' + value + '\"';
+            }
+            sb.append('\"').append(entry.getKey()).append("\": ").append(value).append(",\n\t\t");
         }
-        sb.deleteCharAt(sb.length() - 1);
-        sb.append('}').append(']');
+        sb.delete(sb.length() - 4, sb.length() - 1);
+        return sb.append("\n}\n]").toString();
+    }
 
-        return sb.toString();
+    static String createJsonString(String arrayName, Map<String, String> properties) {
+
+        String jsonProperties = createJsonString(properties);
+        return "{\n\t\"" + arrayName + "\":" + jsonProperties + "\n}";
     }
 }
