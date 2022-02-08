@@ -42,47 +42,49 @@ public class JsonObjectBuilderTest {
     @Test
     void shouldThrowExceptionWhenResourceFileNotFound() {
 
-        Executable constructWithPseudoPath = () ->
-                JsonObjectBuilder.<TestJsonObject>create()
-                        .ofType(TestJsonObject.class)
-                        .withTypeToken(new TypeToken<>() {})
-                        .build(Paths.get("pseudo.json"));
-
+        @SuppressWarnings("CodeBlock2Expr")
+        Executable constructWithPseudoPath = () -> {
+            JsonObjectBuilder.<TestJsonObject>create()
+                    .ofType(TestJsonObject.class)
+                    .withTypeToken(new TypeToken<>() {})
+                    .build(Paths.get("pseudo.json"));
+        };
         Assertions.assertThrows(FileNotFoundException.class, constructWithPseudoPath);
     }
 
     @Test
+    @SuppressWarnings("CodeBlock2Expr")
     void shouldThrowExceptionWhenMembersNotInitialized() {
 
         // type was not initialized
-        Executable constructWithoutType = () ->
-                JsonObjectBuilder.<TestJsonObject>create()
-                        .withTypeToken(new TypeToken<>() {})
-                        .build(Paths.get("pseudo.json"));
-
+        Executable constructWithoutType = () -> {
+            JsonObjectBuilder.<TestJsonObject>create()
+                    .withTypeToken(new TypeToken<>() {})
+                    .build(Paths.get("pseudo.json"));
+        };
         Assertions.assertThrows(IllegalStateException.class, constructWithoutType);
 
-        constructWithoutType = () ->
-                JsonObjectBuilder.<TestJsonObject>create()
-                        .withDeserializer(TestJsonObjectDeserializer.class)
-                        .withTypeToken(new TypeToken<>() {})
-                        .build("");
-
+        constructWithoutType = () -> {
+            JsonObjectBuilder.<TestJsonObject>create()
+                    .withDeserializer(TestJsonObjectDeserializer.class)
+                    .withTypeToken(new TypeToken<>() {})
+                    .build("");
+        };
         Assertions.assertThrows(IllegalStateException.class, constructWithoutType);
 
         // token was not initialized
-        Executable constructWithoutToken = () ->
-                JsonObjectBuilder.<TestJsonObject>create()
-                        .ofType(TestJsonObject.class)
-                        .build(Paths.get("pseudo.json"));
-
+        Executable constructWithoutToken = () -> {
+            JsonObjectBuilder.<TestJsonObject>create()
+                    .ofType(TestJsonObject.class)
+                    .build(Paths.get("pseudo.json"));
+        };
         Assertions.assertThrows(IllegalStateException.class, constructWithoutToken);
 
-        constructWithoutToken = () ->
-                JsonObjectBuilder.<TestJsonObject>create()
-                        .ofType(TestJsonObject.class)
-                        .build("");
-
+        constructWithoutToken = () -> {
+            JsonObjectBuilder.<TestJsonObject>create()
+                    .ofType(TestJsonObject.class)
+                    .build("");
+        };
         Assertions.assertThrows(IllegalStateException.class, constructWithoutToken);
     }
 
