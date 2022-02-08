@@ -36,6 +36,23 @@ abstract class JsonObjectDeserializer<T> extends JsonArrayDeserializer<T> {
     }
 
     /**
+     * Change the value of given {@code Field} owned by object to specified value.
+     *
+     * @param field {@code Field} to change the value of.
+     * @param object the object whose field should be modified.
+     * @param value the new value for the field of obj being modified.
+     */
+    void changeFieldValue(Field field, T object, Object value) {
+
+        try {
+            field.set(object, value);
+        }
+        catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * Deserialize target fields annotated with {@link SerializedObjectName} annotation.
      *
      * @param gson {@code GSon} used in deserializing.
