@@ -1,9 +1,10 @@
 package io.matshou.cata.tilecov.json;
 
-import com.google.common.collect.ImmutableList;
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import com.google.common.collect.ImmutableList;
 
 /**
  * This object contains individual tile information.

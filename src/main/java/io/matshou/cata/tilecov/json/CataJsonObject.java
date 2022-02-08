@@ -1,11 +1,12 @@
 package io.matshou.cata.tilecov.json;
 
+import java.util.Map;
+
+import org.jetbrains.annotations.Nullable;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.annotations.SerializedName;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Map;
 
 /**
  * This class represents Cataclysm JSON object data structure for objects that can have tiles.

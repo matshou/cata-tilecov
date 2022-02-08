@@ -1,10 +1,11 @@
 package io.matshou.cata.tilecov.json;
 
-import com.google.common.collect.ImmutableList;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.List;
 import java.util.Optional;
+
+import org.jetbrains.annotations.Nullable;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * This class represents a tileset {@code tile_config.json} file.

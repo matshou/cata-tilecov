@@ -78,7 +78,8 @@ abstract class JsonArrayDeserializer<T> implements JsonDeserializer<T> {
             List<String> result;
             if (!element.isJsonArray()) {
                 result = List.of(gson.fromJson(element, String.class));
-            } else {
+            }
+            else {
                 result = gson.fromJson(element, new TypeToken<>() {}.getType());
             }
             try {

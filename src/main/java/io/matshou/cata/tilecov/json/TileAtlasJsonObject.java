@@ -1,7 +1,8 @@
 package io.matshou.cata.tilecov.json;
 
-import com.google.gson.annotations.SerializedName;
 import org.jetbrains.annotations.Nullable;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * This JSON object ({@code tiles-new}) contains tile atlas information.
