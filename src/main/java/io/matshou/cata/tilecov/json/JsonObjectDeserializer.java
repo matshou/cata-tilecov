@@ -52,9 +52,14 @@ abstract class JsonObjectDeserializer<T> extends JsonArrayDeserializer<T> {
         JsonObject jsonObject = json.getAsJsonObject();
         T targetObject = gson.fromJson(json, jsonObjectClass);
 
+        // handle json properties that need to be deserialized into custom objects
         for (String entry : jsonObjectFields.keySet()) {
             deserializeObjectMembers(gson, jsonObject, targetObject, entry);
         }
-        return super.deserialize(json, type, context);
+        // handle json properties that can be both string and array of string
+        for (String entry : jsonArrayFields.keySet()) {
+            deserializeArrayMembers(gson, jsonObject, targetObject, entry);
+        }
+        return targetObject;
     }
 }

@@ -71,7 +71,7 @@ abstract class JsonArrayDeserializer<T> implements JsonDeserializer<T> {
      * @param entry name of the json element to deserialize.
      */
     @Contract(mutates = "param3")
-    private void deserializeArrayMembers(Gson gson, JsonObject jsonObject, T target, String entry) {
+    void deserializeArrayMembers(Gson gson, JsonObject jsonObject, T target, String entry) {
 
         JsonElement element = jsonObject.get(entry);
         if (element != null) {
