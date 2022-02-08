@@ -11,3 +11,6 @@ modules.xml
 
 # Application build files
 *.ini
+
+# Local project files
+local.properties
