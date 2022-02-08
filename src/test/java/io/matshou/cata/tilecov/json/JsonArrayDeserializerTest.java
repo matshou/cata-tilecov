@@ -51,8 +51,8 @@ public class JsonArrayDeserializerTest {
                 JsonObjectBuilder.<TestJsonObject>create()
                         .ofType(TestJsonObject.class)
                         .withDeserializer(TestJsonDeserializer.class)
-                        .withTypeToken(new TypeToken<>() {})
-                        .build(jsonString);
+                        .withListTypeToken(new TypeToken<>() {})
+                        .buildAsList(jsonString);
 
         Assertions.assertEquals(1, jsonObjects.size());
         TestJsonObject jsonObject = jsonObjects.get(0);
@@ -72,8 +72,8 @@ public class JsonArrayDeserializerTest {
                 JsonObjectBuilder.<TestJsonObject>create()
                         .ofType(TestJsonObject.class)
                         .withDeserializer(TestJsonDeserializer.class)
-                        .withTypeToken(new TypeToken<>() {})
-                        .build(jsonString);
+                        .withListTypeToken(new TypeToken<>() {})
+                        .buildAsList(jsonString);
 
         Assertions.assertEquals(1, jsonObjects.size());
         TestJsonObject jsonObject = jsonObjects.get(0);
@@ -95,8 +95,8 @@ public class JsonArrayDeserializerTest {
             JsonObjectBuilder.<TestJsonObject>create()
                     .ofType(TestJsonObject.class)
                     .withDeserializer(TestJsonDeserializer.class)
-                    .withTypeToken(new TypeToken<>() {})
-                    .build(failJsonString);
+                    .withListTypeToken(new TypeToken<>() {})
+                    .buildAsList(failJsonString);
         };
         Assertions.assertThrows(JsonSyntaxException.class, shouldThrowException);
 
@@ -107,8 +107,8 @@ public class JsonArrayDeserializerTest {
                 JsonObjectBuilder.<TestJsonObject>create()
                         .ofType(TestJsonObject.class)
                         .withDeserializer(TestJsonDeserializer.class)
-                        .withTypeToken(new TypeToken<>() {})
-                        .build(noFailJsonString);
+                        .withListTypeToken(new TypeToken<>() {})
+                        .buildAsList(noFailJsonString);
 
         Assertions.assertEquals(1, jsonObjects.size());
         TestJsonObject jsonObject = jsonObjects.get(0);
@@ -130,8 +130,8 @@ public class JsonArrayDeserializerTest {
             JsonObjectBuilder.<TestJsonObject>create()
                     .ofType(TestJsonObject.class)
                     .withDeserializer(TestJsonDeserializer.class)
-                    .withTypeToken(new TypeToken<>() {})
-                    .build(jsonString);
+                    .withListTypeToken(new TypeToken<>() {})
+                    .buildAsList(jsonString);
         };
         Assertions.assertThrows(JsonSyntaxException.class, shouldThrowException);
 
@@ -142,8 +142,8 @@ public class JsonArrayDeserializerTest {
                 JsonObjectBuilder.<TestJsonObject>create()
                         .ofType(TestJsonObject.class)
                         .withDeserializer(TestJsonDeserializer.class)
-                        .withTypeToken(new TypeToken<>() {})
-                        .build(jsonArraysString);
+                        .withListTypeToken(new TypeToken<>() {})
+                        .buildAsList(jsonArraysString);
 
         Assertions.assertEquals(1, jsonObjects.size());
         TestJsonObject jsonObject = jsonObjects.get(0);

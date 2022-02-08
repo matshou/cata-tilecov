@@ -22,8 +22,8 @@ public class TileInfoJsonObjectTest {
         List<TileInfoJsonObject> jsonObjects =
                 JsonObjectBuilder.<TileInfoJsonObject>create()
                         .ofType(TileInfoJsonObject.class)
-                        .withTypeToken(new TypeToken<>() {})
-                        .build(jsonString);
+                        .withListTypeToken(new TypeToken<>() {})
+                        .buildAsList(jsonString);
 
         Assertions.assertEquals(1, jsonObjects.size());
         TileInfoJsonObject tileInfo = jsonObjects.get(0);
@@ -44,8 +44,8 @@ public class TileInfoJsonObjectTest {
         List<TileInfoJsonObject> jsonObjects =
                 JsonObjectBuilder.<TileInfoJsonObject>create()
                         .ofType(TileInfoJsonObject.class)
-                        .withTypeToken(new TypeToken<>() {})
-                        .build(jsonString);
+                        .withListTypeToken(new TypeToken<>() {})
+                        .buildAsList(jsonString);
 
         Assertions.assertEquals(1, jsonObjects.size());
         TileInfoJsonObject tileInfo = jsonObjects.get(0);

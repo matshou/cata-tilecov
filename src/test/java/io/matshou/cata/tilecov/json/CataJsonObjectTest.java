@@ -19,9 +19,9 @@ public class CataJsonObjectTest {
 
         List<CataJsonObject> jsonObjects = JsonObjectBuilder.<CataJsonObject>create()
                 .ofType(CataJsonObject.class)
-                .withTypeToken(new TypeToken<>() {})
+                .withListTypeToken(new TypeToken<>() {})
                 .withDeserializer(CataJsonDeserializer.class)
-                .build(Paths.get("furniture.json"));
+                .buildAsList(Paths.get("furniture.json"));
 
         Assertions.assertEquals(4, jsonObjects.size());
 
@@ -57,9 +57,9 @@ public class CataJsonObjectTest {
 
         List<CataJsonObject> jsonObjects = JsonObjectBuilder.<CataJsonObject>create()
                 .ofType(CataJsonObject.class)
-                .withTypeToken(new TypeToken<>() {})
+                .withListTypeToken(new TypeToken<>() {})
                 .withDeserializer(CataJsonDeserializer.class)
-                .build(Paths.get("furniture.json"));
+                .buildAsList(Paths.get("furniture.json"));
 
         Assertions.assertEquals(4, jsonObjects.size());
 
@@ -86,9 +86,9 @@ public class CataJsonObjectTest {
 
         List<CataJsonObject> jsonObjects = JsonObjectBuilder.<CataJsonObject>create()
                 .ofType(CataJsonObject.class)
-                .withTypeToken(new TypeToken<>() {})
+                .withListTypeToken(new TypeToken<>() {})
                 .withDeserializer(CataJsonDeserializer.class)
-                .build(Paths.get("furniture.json"));
+                .buildAsList(Paths.get("furniture.json"));
 
         List<List<List<String>>> expected = ImmutableList.of(
                 List.of(List.of("light_gray"), List.of()),
@@ -118,8 +118,8 @@ public class CataJsonObjectTest {
 
         List<CataJsonObject> jsonObjects = JsonObjectBuilder.<CataJsonObject>create()
                 .ofType(CataJsonObject.class)
-                .withTypeToken(new TypeToken<>() {})
-                .build(Paths.get("furniture.json"));
+                .withListTypeToken(new TypeToken<>() {})
+                .buildAsList(Paths.get("furniture.json"));
 
         for (CataJsonObject cataJsonObject : jsonObjects) {
             Assertions.assertTrue(cataJsonObject.getForegroundColor().isEmpty());

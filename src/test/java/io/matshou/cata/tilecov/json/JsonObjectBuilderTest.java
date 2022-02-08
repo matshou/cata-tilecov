@@ -46,8 +46,8 @@ public class JsonObjectBuilderTest {
         Executable constructWithPseudoPath = () -> {
             JsonObjectBuilder.<TestJsonObject>create()
                     .ofType(TestJsonObject.class)
-                    .withTypeToken(new TypeToken<>() {})
-                    .build(Paths.get("pseudo.json"));
+                    .withListTypeToken(new TypeToken<>() {})
+                    .buildAsList(Paths.get("pseudo.json"));
         };
         Assertions.assertThrows(FileNotFoundException.class, constructWithPseudoPath);
     }
@@ -59,16 +59,16 @@ public class JsonObjectBuilderTest {
         // type was not initialized
         Executable constructWithoutType = () -> {
             JsonObjectBuilder.<TestJsonObject>create()
-                    .withTypeToken(new TypeToken<>() {})
-                    .build(Paths.get("pseudo.json"));
+                    .withListTypeToken(new TypeToken<>() {})
+                    .buildAsList(Paths.get("pseudo.json"));
         };
         Assertions.assertThrows(IllegalStateException.class, constructWithoutType);
 
         constructWithoutType = () -> {
             JsonObjectBuilder.<TestJsonObject>create()
                     .withDeserializer(TestJsonObjectDeserializer.class)
-                    .withTypeToken(new TypeToken<>() {})
-                    .build("");
+                    .withListTypeToken(new TypeToken<>() {})
+                    .buildAsList("");
         };
         Assertions.assertThrows(IllegalStateException.class, constructWithoutType);
 
@@ -76,14 +76,14 @@ public class JsonObjectBuilderTest {
         Executable constructWithoutToken = () -> {
             JsonObjectBuilder.<TestJsonObject>create()
                     .ofType(TestJsonObject.class)
-                    .build(Paths.get("pseudo.json"));
+                    .buildAsList(Paths.get("pseudo.json"));
         };
         Assertions.assertThrows(IllegalStateException.class, constructWithoutToken);
 
         constructWithoutToken = () -> {
             JsonObjectBuilder.<TestJsonObject>create()
                     .ofType(TestJsonObject.class)
-                    .build("");
+                    .buildAsList("");
         };
         Assertions.assertThrows(IllegalStateException.class, constructWithoutToken);
     }
@@ -96,8 +96,8 @@ public class JsonObjectBuilderTest {
         );
         List<TestJsonObject> jsonObjects = JsonObjectBuilder.<TestJsonObject>create()
                 .ofType(TestJsonObject.class)
-                .withTypeToken(new TypeToken<>() {})
-                .build(jsonString);
+                .withListTypeToken(new TypeToken<>() {})
+                .buildAsList(jsonString);
 
         TestJsonObject jsonObject = jsonObjects.get(0);
         Assertions.assertEquals(1, jsonObjects.size());
@@ -113,9 +113,9 @@ public class JsonObjectBuilderTest {
         );
         List<TestJsonObject> jsonObjects = JsonObjectBuilder.<TestJsonObject>create()
                 .ofType(TestJsonObject.class)
-                .withTypeToken(new TypeToken<>() {})
+                .withListTypeToken(new TypeToken<>() {})
                 .withDeserializer(TestJsonObjectDeserializer.class)
-                .build(jsonString);
+                .buildAsList(jsonString);
 
         TestJsonObject jsonObject = jsonObjects.get(0);
         Assertions.assertEquals("2", jsonObject.jsonProperty);

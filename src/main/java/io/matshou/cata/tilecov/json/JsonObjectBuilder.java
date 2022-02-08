@@ -5,6 +5,7 @@ import java.lang.reflect.Constructor;
 import java.nio.file.Path;
 import java.util.List;
 
+import com.google.gson.JsonSyntaxException;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,7 +36,13 @@ public class JsonObjectBuilder<T> {
     }
 
     @Contract("_ -> this")
-    public JsonObjectBuilder<T> withTypeToken(TypeToken<List<T>> token) {
+    public JsonObjectBuilder<T> withListTypeToken(TypeToken<List<T>> token) {
+        typeToken = token;
+        return this;
+    }
+
+    @Contract("_ -> this")
+    public JsonObjectBuilder<T> withTypeToken(TypeToken<T> token) {
         typeToken = token;
         return this;
     }
@@ -61,7 +68,7 @@ public class JsonObjectBuilder<T> {
      * @throws FileNotFoundException when the resource under given path was not found.
      * @throws IllegalStateException if needed builder members are not initialized.
      */
-    public List<T> build(Path path) throws IOException, IllegalStateException {
+    public List<T> buildAsList(Path path) throws IOException, IllegalStateException {
 
         if (jsonObjectType == null) {
             throw new IllegalStateException("jsonObjectType was not defined");
@@ -90,14 +97,52 @@ public class JsonObjectBuilder<T> {
     }
 
     /**
-     * Build JSON object by deserializing the JSON from given string.
+     * Build list of JSON objects by deserializing the JSON from given string.
+     * <p>
+     * Note that when using this method to build you need to make sure that {@code TypeToken}
+     * set for this builder is of type {@link List} otherwise an exception will be thrown.
      *
      * @param jsonContent string to deserialize.
      * @return JSON object as result of deserializing the string.
      *
      * @throws IllegalStateException if needed builder members are not initialized.
+     * @throws JsonSyntaxException when there was an error while building the object.
      */
-    public List<T> build(String jsonContent) throws IllegalStateException {
+    public List<T> buildAsList(String jsonContent) throws IllegalStateException {
+
+        GsonBuilder builder = new GsonBuilder();
+        if (deserializer != null) {
+            if (jsonObjectType == null) {
+                throw new IllegalStateException("jsonObjectType was not defined");
+            }
+            try {
+                // assume there is a single constructor with no arguments
+                Constructor<?> constructor = deserializer.getDeclaredConstructor();
+                builder.registerTypeAdapter(jsonObjectType, constructor.newInstance());
+            }
+            catch (ReflectiveOperationException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if (typeToken == null) {
+            throw new IllegalStateException("typeToken was not defined");
+        }
+        return builder.create().fromJson(jsonContent, typeToken.getType());
+    }
+
+    /**
+     * Build JSON object by deserializing the JSON from given string.
+     * <p>
+     * Note that when using this method to build you need to make sure that {@code TypeToken}
+     * set for this builder is NOT of type {@link List} otherwise an exception will be thrown.
+     *
+     * @param jsonContent string to deserialize.
+     * @return JSON object as result of deserializing the string.
+     *
+     * @throws IllegalStateException if needed builder members are not initialized.
+     * @throws JsonSyntaxException when there was an error while building the object.
+     */
+    public T build(String jsonContent) throws IllegalStateException {
 
         GsonBuilder builder = new GsonBuilder();
         if (deserializer != null) {
