@@ -1,7 +1,7 @@
 package io.matshou.cata.tilecov.json;
 
 /**
- * This object contains tileset metadata information.
+ * This object contains basic tileset information.
  *
  * @see <a href="https://github.com/cataclysmbnteam/Cataclysm-BN/blob/upload/doc/TILESET.md#tile_config">
  * Cataclysm: Bright Nights - Tileset: tile_config</a>

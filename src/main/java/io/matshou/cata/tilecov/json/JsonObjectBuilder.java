@@ -29,30 +29,60 @@ public class JsonObjectBuilder<T> {
     private @Nullable Class<? extends JsonDeserializer<T>> deserializer;
     private @Nullable TypeToken<?> typeToken;
 
+    /**
+     * Instructs the builder to build an object of the given type.
+     *
+     * @param type {@code Class} representing the object that will be built.
+     * @return reference to this builder.
+     */
     @Contract("_ -> this")
     public JsonObjectBuilder<T> ofType(Class<T> type) {
         jsonObjectType = type;
         return this;
     }
 
+    /**
+     * Instructs the builder to expect the result of building to be a {@link List}.
+     *
+     * @param token {@code TypeToken} used in deserialization.
+     * @return reference to this builder.
+     */
     @Contract("_ -> this")
     public JsonObjectBuilder<T> withListTypeToken(TypeToken<List<T>> token) {
         typeToken = token;
         return this;
     }
 
+    /**
+     * Instructs the builder to expect the result of building to be an object.
+     *
+     * @param token {@code TypeToken} used in deserialization.
+     * @return reference to this builder.
+     */
     @Contract("_ -> this")
     public JsonObjectBuilder<T> withTypeToken(TypeToken<T> token) {
         typeToken = token;
         return this;
     }
 
+    /**
+     * Instructs the builder to use the deserializer of given {@code Class} when building.
+     *
+     * @param clazz {@code Class} of the deserializer to be used.
+     * @return reference to this builder.
+     */
     @Contract("_ -> this")
     public JsonObjectBuilder<T> withDeserializer(Class<? extends JsonDeserializer<T>> clazz) {
         deserializer = clazz;
         return this;
     }
 
+    /**
+     * Create a new instance of this builder.
+     *
+     * @param <T> type of object that will be the result of building.
+     * @return new instance of this builder.
+     */
     @Contract("-> new")
     public static <T> JsonObjectBuilder<T> create() {
         return new JsonObjectBuilder<>();
