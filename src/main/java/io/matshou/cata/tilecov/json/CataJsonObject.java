@@ -1,12 +1,11 @@
 package io.matshou.cata.tilecov.json;
 
-import java.util.ArrayList;
-import java.util.Map;
-
-import org.jetbrains.annotations.Nullable;
-
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.annotations.SerializedName;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
 
 /**
  * This class represents Cataclysm JSON object data structure for objects that can have tiles.
@@ -81,8 +80,8 @@ public class CataJsonObject {
      * or an empty list if colors are not defined. The list should be expected
      * to hold up to a maximum of 4 entries (one color for each calendar season).
      */
-    public java.util.List<String> getForegroundColor() {
-        return fgColor != null ? fgColor : new ArrayList<>();
+    public ImmutableList<String> getForegroundColor() {
+        return fgColor != null ? ImmutableList.copyOf(fgColor) : ImmutableList.of();
     }
 
     /**
@@ -90,8 +89,8 @@ public class CataJsonObject {
      * or an empty list if colors are not defined. The list should be expected
      * to hold up to a maximum of 4 entries (one color for each calendar season).
      */
-    public java.util.List<String> getBackgroundColor() {
-        return bgColor != null ? bgColor : new ArrayList<>();
+    public ImmutableList<String> getBackgroundColor() {
+        return bgColor != null ? ImmutableList.copyOf(bgColor) : ImmutableList.of();
     }
 
     /**
