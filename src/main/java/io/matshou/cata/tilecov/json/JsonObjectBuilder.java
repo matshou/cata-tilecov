@@ -4,7 +4,6 @@ import java.io.*;
 import java.lang.reflect.Constructor;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.jetbrains.annotations.Contract;
@@ -94,12 +93,18 @@ public class JsonObjectBuilder<T> {
 	@Contract("_-> new")
 	private InputStreamReader readJsonFromPath(Path path) throws IOException {
 
-		String sPath = '/' + path.toString();
-		InputStream stream = Objects.requireNonNull(jsonObjectType).getResourceAsStream(sPath);
-		if (stream == null) {
-			throw new FileNotFoundException("Unable getResourceAsStream from path: " + sPath);
+		File jsonFile = path.toFile();
+		if (!jsonFile.exists()) {
+			// we are most probably running a unit test
+			// try getting looking for resource within the jar
+			String sPath = path.toString();
+			InputStream stream = jsonObjectType.getResourceAsStream('/' + sPath);
+			if (stream == null) {
+				throw new FileNotFoundException("Unable getResourceAsStream from path: " + sPath);
+			}
+			return new InputStreamReader(stream);
 		}
-		return new InputStreamReader(stream);
+		return new InputStreamReader(new FileInputStream(jsonFile));
 	}
 
 	@Contract("-> new")
