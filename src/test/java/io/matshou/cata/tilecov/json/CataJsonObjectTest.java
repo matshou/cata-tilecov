@@ -1,6 +1,7 @@
 package io.matshou.cata.tilecov.json;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,6 +16,8 @@ import com.google.gson.reflect.TypeToken;
 
 public class CataJsonObjectTest {
 
+	private static final Path FURNITURE = Paths.get("data/json/furniture_and_terrain/furniture.json");
+
 	@Test
 	void shouldDeserializeProperties() throws IOException {
 
@@ -22,7 +25,7 @@ public class CataJsonObjectTest {
 				.ofType(CataJsonObject.class)
 				.withListTypeToken(new TypeToken<>() {})
 				.withDeserializer(CataJsonDeserializer.class)
-				.buildAsList(Paths.get("furniture.json"));
+				.buildAsList(FURNITURE);
 
 		Assertions.assertTrue(oJsonObjects.isPresent());
 		List<CataJsonObject> jsonObjects = oJsonObjects.get();
@@ -62,7 +65,7 @@ public class CataJsonObjectTest {
 				.ofType(CataJsonObject.class)
 				.withListTypeToken(new TypeToken<>() {})
 				.withDeserializer(CataJsonDeserializer.class)
-				.buildAsList(Paths.get("furniture.json"));
+				.buildAsList(FURNITURE);
 
 		Assertions.assertTrue(oJsonObjects.isPresent());
 		List<CataJsonObject> jsonObjects = oJsonObjects.get();
@@ -93,7 +96,7 @@ public class CataJsonObjectTest {
 				.ofType(CataJsonObject.class)
 				.withListTypeToken(new TypeToken<>() {})
 				.withDeserializer(CataJsonDeserializer.class)
-				.buildAsList(Paths.get("furniture.json"));
+				.buildAsList(FURNITURE);
 
 		Assertions.assertTrue(oJsonObjects.isPresent());
 		List<CataJsonObject> jsonObjects = oJsonObjects.get();
@@ -127,7 +130,7 @@ public class CataJsonObjectTest {
 		Optional<List<CataJsonObject>> oJsonObjects = JsonObjectBuilder.<CataJsonObject>create()
 				.ofType(CataJsonObject.class)
 				.withListTypeToken(new TypeToken<>() {})
-				.buildAsList(Paths.get("furniture.json"));
+				.buildAsList(FURNITURE);
 
 		Assertions.assertTrue(oJsonObjects.isPresent());
 		List<CataJsonObject> jsonObjects = oJsonObjects.get();
