@@ -1,12 +1,13 @@
 package io.matshou.cata.tilecov.json;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.gson.*;
-import org.jetbrains.annotations.Contract;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Map;
+
+import org.jetbrains.annotations.Contract;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.gson.*;
 
 abstract class JsonObjectDeserializer<T> extends JsonArrayDeserializer<T> {
 

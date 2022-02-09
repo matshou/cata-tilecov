@@ -1,13 +1,14 @@
 package io.matshou.cata.tilecov.json;
 
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-import java.util.List;
-import java.util.Map;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class JsonArrayDeserializerTest {

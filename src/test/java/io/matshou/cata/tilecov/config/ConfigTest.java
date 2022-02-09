@@ -1,16 +1,17 @@
 package io.matshou.cata.tilecov.config;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.io.CharSink;
-import com.google.common.io.Files;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.ArrayList;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.io.CharSink;
+import com.google.common.io.Files;
 
 import static org.junit.jupiter.api.Assertions.*;
 

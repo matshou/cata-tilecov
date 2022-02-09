@@ -1,11 +1,12 @@
 package io.matshou.cata.tilecov.json;
 
-import com.google.gson.reflect.TypeToken;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.Map;
+import com.google.gson.reflect.TypeToken;
 
 public class TileInfoJsonObjectTest {
 

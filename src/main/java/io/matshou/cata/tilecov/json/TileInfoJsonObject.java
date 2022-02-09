@@ -14,7 +14,6 @@ public class TileInfoJsonObject {
 
 	/**
 	 * @return width of each tile in this tileset.
-	 *
 	 * @throws NumberFormatException if the value it not a parsable integer.
 	 */
 	public int getWidth() {
@@ -23,7 +22,6 @@ public class TileInfoJsonObject {
 
 	/**
 	 * @return height of each tile in this tileset.
-	 *
 	 * @throws NumberFormatException if the value it not a parsable integer.
 	 */
 	public int getHeight() {
@@ -43,7 +41,6 @@ public class TileInfoJsonObject {
 	 * Multiplier for resizing a tileset.
 	 *
 	 * @return pixel scale of the tileset. Default value is {@code 1}.
-	 *
 	 * @throws NumberFormatException if the value it not a parsable integer.
 	 */
 	public int getPixelScale() {

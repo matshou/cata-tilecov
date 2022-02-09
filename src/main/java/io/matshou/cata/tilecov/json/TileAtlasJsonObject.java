@@ -1,10 +1,11 @@
 package io.matshou.cata.tilecov.json;
 
-import com.google.common.collect.ImmutableList;
-import com.google.gson.annotations.SerializedName;
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import com.google.common.collect.ImmutableList;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * This JSON object ({@code tiles-new}) contains tile atlas information.

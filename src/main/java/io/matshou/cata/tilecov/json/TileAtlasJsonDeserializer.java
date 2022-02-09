@@ -1,13 +1,13 @@
 package io.matshou.cata.tilecov.json;
 
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Objects;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * This deserializer is used to deserialize {@link TileAtlasJsonObject} from JSON.

@@ -3,8 +3,8 @@
     {
       "height": 32,
       "width": 32,
-      "iso" : true,
-      "pixelscale" : 2
+      "iso": true,
+      "pixelscale": 2
     }
   ],
   "tiles-new": [
@@ -19,26 +19,26 @@
         },
         {
           "id": "t_wall",
-          "fg": [2918, 2919, 2918, 2919],
+          "fg": [ 2918, 2919, 2918, 2919 ],
           "bg": 633,
           "rotates": true,
           "multitile": true,
           "additional_tiles": [
             {
               "id": "center",
-              "fg": [2919, 2918, 2919, 2918]
+              "fg": [ 2919, 2918, 2919, 2918 ]
             },
             {
               "id": "corner",
-              "fg": [2924, 2922, 2922, 2923]
+              "fg": [ 2924, 2922, 2922, 2923 ]
             },
             {
               "id": "end_piece",
-              "fg": [2918, 2919, 2918, 2919]
+              "fg": [ 2918, 2919, 2918, 2919 ]
             },
             {
               "id": "t_connection",
-              "fg": [2919, 2918, 2919, 2918]
+              "fg": [ 2919, 2918, 2919, 2918 ]
             },
             {
               "id": "unconnected",
@@ -63,10 +63,10 @@
           "id": "t_dirt",
           "rotates": false,
           "fg": [
-            { "weight":50, "sprite":640},
-            { "weight":1, "sprite":3620},
-            { "weight":1, "sprite":3621},
-            { "weight":1, "sprite":3622}
+            { "weight": 50, "sprite": 640 },
+            { "weight": 1, "sprite": 3620 },
+            { "weight": 1, "sprite": 3621 },
+            { "weight": 1, "sprite": 3622 }
           ]
         },
         {
@@ -83,7 +83,7 @@
       "file": "moretiles.png",
       "tiles": [
         {
-          "id": ["xxx","yyy"],
+          "id": [ "xxx", "yyy" ],
           "fg": 1,
           "bg": 234
         }
@@ -92,16 +92,16 @@
   ],
   "overlay_ordering": [
     {
-      "id" : "WINGS_BAT",
-      "order" : 1000
+      "id": "WINGS_BAT",
+      "order": 1000
     },
     {
-      "id" : [ "PLANTSKIN", "BARK" ],
-      "order" : 3500
+      "id": [ "PLANTSKIN", "BARK" ],
+      "order": 3500
     },
     {
-      "id" : "bio_armor_torso",
-      "order" : 500
+      "id": "bio_armor_torso",
+      "order": 500
     }
   ]
 }

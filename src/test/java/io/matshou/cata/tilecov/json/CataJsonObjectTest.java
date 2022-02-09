@@ -1,15 +1,16 @@
 package io.matshou.cata.tilecov.json;
 
-import com.google.common.collect.ImmutableList;
-import com.google.gson.reflect.TypeToken;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import com.google.common.collect.ImmutableList;
+import com.google.gson.reflect.TypeToken;
 
 public class CataJsonObjectTest {
 

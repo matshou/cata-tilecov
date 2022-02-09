@@ -1,14 +1,15 @@
 package io.matshou.cata.tilecov.json;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
-import org.jetbrains.annotations.Contract;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
+
+import org.jetbrains.annotations.Contract;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * This class represents a custom deserializer for Json that is able to handle

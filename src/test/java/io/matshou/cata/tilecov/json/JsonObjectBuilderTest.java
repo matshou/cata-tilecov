@@ -1,16 +1,17 @@
 package io.matshou.cata.tilecov.json;
 
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
-
 import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 
 public class JsonObjectBuilderTest {
 
@@ -27,7 +28,7 @@ public class JsonObjectBuilderTest {
 
 		@Override
 		public TestJsonObject deserialize(JsonElement json, Type type,
-		                                  JsonDeserializationContext context) throws JsonParseException {
+										  JsonDeserializationContext context) throws JsonParseException {
 
 			TestJsonObject jsonObject = new Gson().fromJson(json, TestJsonObject.class);
 
