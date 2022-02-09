@@ -38,6 +38,7 @@ public class TileConfigJsonDeserializer extends JsonObjectDeserializer<TileConfi
             List<TileAtlasJsonObject> jsonObjects = JsonObjectBuilder.<TileAtlasJsonObject>create()
                     .ofType(TileAtlasJsonObject.class)
                     .withListTypeToken(new TypeToken<>() {})
+                    .withDeserializer(TileAtlasJsonDeserializer.class)
                     .buildAsList(element.toString());
 
             Field field = Objects.requireNonNull(jsonObjectFields.get("tiles-new"));

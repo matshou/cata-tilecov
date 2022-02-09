@@ -1,7 +1,10 @@
 package io.matshou.cata.tilecov.json;
 
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -14,6 +17,9 @@ import com.google.gson.annotations.SerializedName;
 public class TileAtlasJsonObject {
 
     private @Nullable String file;
+
+    @SerializedObjectName("tiles")
+    private @Nullable List<TilesJsonObject> lTiles;
 
     @SerializedName("sprite_width")
     private int spriteWidth;
@@ -33,6 +39,10 @@ public class TileAtlasJsonObject {
      */
     public String getFilename() {
         return file != null ? file : "";
+    }
+
+    public ImmutableList<TilesJsonObject> getTiles() {
+        return lTiles != null ? ImmutableList.copyOf(lTiles) : ImmutableList.of();
     }
 
     /**
