@@ -9,7 +9,7 @@ plugins {
 
     // Plugin that keeps your code spotless with Gradle
     // https://plugins.gradle.org/plugin/com.diffplug.spotless
-    id "com.diffplug.spotless" version "6.2.1"
+    id "com.diffplug.spotless" version "6.2.2"
 }
 // project spotless formatting rules
 apply from: 'spotless.gradle'
