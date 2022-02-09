@@ -15,7 +15,10 @@ import com.google.gson.annotations.SerializedName;
 @SuppressWarnings("unused")
 public class CataJsonObject {
 
-	private @Nullable String type, id, name, description;
+	private @Nullable String type, id, description;
+
+	@SerializedObjectName("name")
+	private @Nullable CataJsonObjectName objectName;
 
 	@SerializedArrayName("color")
 	private @Nullable java.util.List<String> fgColor;
@@ -65,7 +68,7 @@ public class CataJsonObject {
 	 * @return display name of the object or an empty string if name is not defined.
 	 */
 	public String getName() {
-		return name != null ? name : "";
+		return objectName != null ? objectName.get() : "";
 	}
 
 	/**
