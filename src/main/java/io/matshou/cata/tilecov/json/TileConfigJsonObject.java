@@ -1,11 +1,10 @@
 package io.matshou.cata.tilecov.json;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.google.common.collect.ImmutableList;
 import org.jetbrains.annotations.Nullable;
 
-import com.google.common.collect.ImmutableList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * This class represents a tileset {@code tile_config.json} file.
@@ -16,24 +15,24 @@ import com.google.common.collect.ImmutableList;
 @SuppressWarnings("unused")
 public class TileConfigJsonObject {
 
-    @SerializedObjectName("tile_info")
-    private @Nullable TileInfoJsonObject tileInfo;
+	@SerializedObjectName("tile_info")
+	private @Nullable TileInfoJsonObject tileInfo;
 
-    @SerializedObjectName("tiles-new")
-    private @Nullable List<TileAtlasJsonObject> tileAtlases;
+	@SerializedObjectName("tiles-new")
+	private @Nullable List<TileAtlasJsonObject> tileAtlases;
 
-    /**
-     * @return basic tileset information.
-     */
-    public Optional<TileInfoJsonObject> getTileInfo() {
-        return Optional.ofNullable(tileInfo);
-    }
+	/**
+	 * @return basic tileset information.
+	 */
+	public Optional<TileInfoJsonObject> getTileInfo() {
+		return Optional.ofNullable(tileInfo);
+	}
 
-    /**
-     * @return list of tile atlases contained in this tileset
-     * or an empty list if the property is not defined.
-     */
-    public ImmutableList<TileAtlasJsonObject> getTileAtlases() {
-        return tileAtlases != null ? ImmutableList.copyOf(tileAtlases) : ImmutableList.of();
-    }
+	/**
+	 * @return list of tile atlases contained in this tileset
+	 * or an empty list if the property is not defined.
+	 */
+	public ImmutableList<TileAtlasJsonObject> getTileAtlases() {
+		return tileAtlases != null ? ImmutableList.copyOf(tileAtlases) : ImmutableList.of();
+	}
 }

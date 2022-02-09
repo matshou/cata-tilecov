@@ -5,7 +5,7 @@ package io.matshou.cata.tilecov.config;
  */
 public class ConfigPropertyException extends RuntimeException {
 
-    ConfigPropertyException(String reason) {
-        super(reason);
-    }
+	ConfigPropertyException(String reason) {
+		super(reason);
+	}
 }

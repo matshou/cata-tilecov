@@ -19,8 +19,8 @@ import java.lang.annotation.*;
 @Target({ ElementType.FIELD, ElementType.METHOD })
 public @interface SerializedArrayName {
 
-    /**
-     * @return the desired name of the field when it is serialized or deserialized.
-     */
-    String value();
+	/**
+	 * @return the desired name of the field when it is serialized or deserialized.
+	 */
+	String value();
 }

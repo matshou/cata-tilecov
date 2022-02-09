@@ -5,7 +5,7 @@ package io.matshou.cata.tilecov.json;
  */
 public class CataJsonDeserializer extends JsonArrayDeserializer<CataJsonObject> {
 
-    CataJsonDeserializer() {
-        super(CataJsonObject.class);
-    }
+	CataJsonDeserializer() {
+		super(CataJsonObject.class);
+	}
 }
