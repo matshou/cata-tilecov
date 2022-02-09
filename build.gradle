@@ -11,13 +11,11 @@ plugins {
     // https://plugins.gradle.org/plugin/com.diffplug.spotless
     id "com.diffplug.spotless" version "6.2.1"
 }
-apply plugin: 'com.diffplug.spotless'
+// project spotless formatting rules
+apply from: 'spotless.gradle'
 
 // register local project properties
 apply from: 'setup.gradle'
-
-// personal spotless formatting rules for Java projects
-apply from: "https://gist.githubusercontent.com/matshou/${spotlessGistID}/raw/spotless.gradle"
 
 repositories {
     mavenCentral()
