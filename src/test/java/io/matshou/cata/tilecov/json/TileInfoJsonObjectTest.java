@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import com.google.gson.reflect.TypeToken;
 
+@SuppressWarnings("ConstantConditions")
 public class TileInfoJsonObjectTest {
 
 	@Test

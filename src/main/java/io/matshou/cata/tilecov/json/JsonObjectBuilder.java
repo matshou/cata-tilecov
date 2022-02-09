@@ -127,17 +127,18 @@ public class JsonObjectBuilder<T> {
 	/**
 	 * Build JSON object by deserializing the JSON file under given path.
 	 *
-	 * @param path path to JSON file as resource.
-	 * @return list of JSON objects as result of deserializing a JSON file.
+	 * @param jsonPath path to JSON file as resource.
+	 * @return list of JSON objects as result of deserializing a JSON file
+	 * or {@code null} f json is null or if json is empty.
 	 *
 	 * @throws IOException if an exception occurred while creating new {@code BufferedReader}.
 	 * @throws FileNotFoundException when the resource under given path was not found.
 	 * @throws IllegalStateException if needed builder members are not initialized.
 	 */
-	public List<T> buildAsList(Path path) throws IOException, IllegalStateException {
+	public @Nullable List<T> buildAsList(Path jsonPath) throws IOException, IllegalStateException {
 
 		GsonBuilder builder = startBuildFromPath();
-		try (Reader reader = readJsonFromPath(path)) {
+		try (Reader reader = readJsonFromPath(jsonPath)) {
 			return builder.create().fromJson(reader, typeToken.getType());
 		}
 	}
@@ -145,17 +146,18 @@ public class JsonObjectBuilder<T> {
 	/**
 	 * Build JSON object by deserializing the JSON file under given path.
 	 *
-	 * @param path path to JSON file as resource.
-	 * @return JSON object as result of deserializing a JSON file.
+	 * @param jsonPath path to JSON file as resource.
+	 * @return JSON object as result of deserializing a JSON file
+	 * or {@code null} f json is null or if json is empty.
 	 *
 	 * @throws IOException if an exception occurred while creating new {@code BufferedReader}.
 	 * @throws FileNotFoundException when the resource under given path was not found.
 	 * @throws IllegalStateException if needed builder members are not initialized.
 	 */
-	public T build(Path path) throws IOException, IllegalStateException {
+	public @Nullable T build(Path jsonPath) throws IOException, IllegalStateException {
 
 		GsonBuilder builder = startBuildFromPath();
-		try (Reader reader = readJsonFromPath(path)) {
+		try (Reader reader = readJsonFromPath(jsonPath)) {
 			return builder.create().fromJson(reader, typeToken.getType());
 		}
 	}
@@ -189,16 +191,17 @@ public class JsonObjectBuilder<T> {
 	 * Note that when using this method to build you need to make sure that {@code TypeToken}
 	 * set for this builder is of type {@link List} otherwise an exception will be thrown.
 	 *
-	 * @param jsonContent string to deserialize.
-	 * @return list of JSON objects as result of deserializing the string.
+	 * @param json string to deserialize.
+	 * @return list of JSON objects as result of deserializing the string
+	 * or {@code null} f json is null or if json is empty.
 	 *
 	 * @throws IllegalStateException if needed builder members are not initialized.
 	 * @throws JsonSyntaxException when there was an error while building the object.
 	 */
-	public List<T> buildAsList(String jsonContent) throws IllegalStateException {
+	public @Nullable List<T> buildAsList(String json) throws IllegalStateException {
 
 		GsonBuilder builder = startBuildFromString();
-		return builder.create().fromJson(jsonContent, typeToken.getType());
+		return builder.create().fromJson(json, typeToken.getType());
 	}
 
 	/**
@@ -207,15 +210,16 @@ public class JsonObjectBuilder<T> {
 	 * Note that when using this method to build you need to make sure that {@code TypeToken}
 	 * set for this builder is NOT of type {@link List} otherwise an exception will be thrown.
 	 *
-	 * @param jsonContent string to deserialize.
-	 * @return JSON object as result of deserializing the string.
+	 * @param json string to deserialize.
+	 * @return JSON object as result of deserializing the string
+	 * or {@code null} f json is null or if json is empty.
 	 *
 	 * @throws IllegalStateException if needed builder members are not initialized.
 	 * @throws JsonSyntaxException when there was an error while building the object.
 	 */
-	public T build(String jsonContent) throws IllegalStateException {
+	public @Nullable T build(String json) throws IllegalStateException {
 
 		GsonBuilder builder = startBuildFromString();
-		return builder.create().fromJson(jsonContent, typeToken.getType());
+		return builder.create().fromJson(json, typeToken.getType());
 	}
 }

@@ -5,6 +5,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.*;
@@ -42,7 +43,7 @@ abstract class JsonObjectDeserializer<T> extends JsonArrayDeserializer<T> {
 	 * @param object the object whose field should be modified.
 	 * @param value the new value for the field of obj being modified.
 	 */
-	void changeFieldValue(Field field, T object, Object value) {
+	void changeFieldValue(Field field, T object, @Nullable Object value) {
 
 		try {
 			field.set(object, value);

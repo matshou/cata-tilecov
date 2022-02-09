@@ -13,6 +13,7 @@ import org.junit.jupiter.api.function.Executable;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
+@SuppressWarnings("ConstantConditions")
 public class JsonObjectBuilderTest {
 
 	private static class TestJsonObject {

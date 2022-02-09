@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.reflect.TypeToken;
 
+@SuppressWarnings("ConstantConditions")
 public class CataJsonObjectTest {
 
 	@Test

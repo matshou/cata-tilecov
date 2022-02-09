@@ -7,6 +7,7 @@ import java.util.Objects;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 /**
@@ -31,6 +32,9 @@ public class TileConfigJsonDeserializer extends JsonObjectDeserializer<TileConfi
 					.withListTypeToken(new TypeToken<>() {})
 					.buildAsList(element.toString());
 
+			if (jsonObjects == null) {
+				throw new JsonSyntaxException("Cannot find tile_info json property");
+			}
 			Field field = Objects.requireNonNull(jsonObjectFields.get("tile_info"));
 			changeFieldValue(field, target, jsonObjects.get(0));
 		}

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.function.Executable;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
-@SuppressWarnings("SpellCheckingInspection")
+@SuppressWarnings({ "SpellCheckingInspection", "ConstantConditions" })
 public class JsonArrayDeserializerTest {
 
 	@SuppressWarnings("unused")
