@@ -2,13 +2,13 @@ package io.matshou.cata.tilecov.json;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.google.gson.reflect.TypeToken;
 
-@SuppressWarnings("ConstantConditions")
 public class TileInfoJsonObjectTest {
 
 	@Test
@@ -20,11 +20,13 @@ public class TileInfoJsonObjectTest {
 				"height", "32",
 				"iso", "true"
 		));
-		List<TileInfoJsonObject> jsonObjects =
-				JsonObjectBuilder.<TileInfoJsonObject>create()
-						.ofType(TileInfoJsonObject.class)
-						.withListTypeToken(new TypeToken<>() {})
-						.buildAsList(jsonString);
+		Optional<List<TileInfoJsonObject>> oJsonObjects = JsonObjectBuilder.<TileInfoJsonObject>create()
+				.ofType(TileInfoJsonObject.class)
+				.withListTypeToken(new TypeToken<>() {})
+				.buildAsList(jsonString);
+
+		Assertions.assertTrue(oJsonObjects.isPresent());
+		List<TileInfoJsonObject> jsonObjects = oJsonObjects.get();
 
 		Assertions.assertEquals(1, jsonObjects.size());
 		TileInfoJsonObject tileInfo = jsonObjects.get(0);
@@ -42,11 +44,13 @@ public class TileInfoJsonObjectTest {
 				"width", "32",
 				"height", "32"
 		));
-		List<TileInfoJsonObject> jsonObjects =
-				JsonObjectBuilder.<TileInfoJsonObject>create()
-						.ofType(TileInfoJsonObject.class)
-						.withListTypeToken(new TypeToken<>() {})
-						.buildAsList(jsonString);
+		Optional<List<TileInfoJsonObject>> oJsonObjects = JsonObjectBuilder.<TileInfoJsonObject>create()
+				.ofType(TileInfoJsonObject.class)
+				.withListTypeToken(new TypeToken<>() {})
+				.buildAsList(jsonString);
+
+		Assertions.assertTrue(oJsonObjects.isPresent());
+		List<TileInfoJsonObject> jsonObjects = oJsonObjects.get();
 
 		Assertions.assertEquals(1, jsonObjects.size());
 		TileInfoJsonObject tileInfo = jsonObjects.get(0);

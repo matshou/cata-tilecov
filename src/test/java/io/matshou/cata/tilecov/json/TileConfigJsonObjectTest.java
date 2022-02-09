@@ -21,11 +21,14 @@ public class TileConfigJsonObjectTest {
 	@BeforeEach
 	void readTileConfigFromJson() throws IOException {
 
-		tileConfig = JsonObjectBuilder.<TileConfigJsonObject>create()
+		Optional<TileConfigJsonObject> oTileConfig = JsonObjectBuilder.<TileConfigJsonObject>create()
 				.ofType(TileConfigJsonObject.class)
 				.withTypeToken(new TypeToken<>() {})
 				.withDeserializer(TileConfigJsonDeserializer.class)
 				.build(Paths.get("tile_config.json"));
+
+		Assertions.assertTrue(oTileConfig.isPresent());
+		tileConfig = oTileConfig.get();
 	}
 
 	@Test

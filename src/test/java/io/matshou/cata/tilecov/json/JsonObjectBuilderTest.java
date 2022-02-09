@@ -5,6 +5,7 @@ import java.lang.reflect.Type;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.function.Executable;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
-@SuppressWarnings("ConstantConditions")
 public class JsonObjectBuilderTest {
 
 	private static class TestJsonObject {
@@ -25,6 +25,7 @@ public class JsonObjectBuilderTest {
 		private String pseudoProperty;
 	}
 
+	// spotless:off
 	public static class TestJsonObjectDeserializer implements JsonDeserializer<TestJsonObject> {
 
 		@Override
@@ -38,7 +39,7 @@ public class JsonObjectBuilderTest {
 
 			return jsonObject;
 		}
-	}
+	}// spotless:on
 
 	@Test
 	void shouldThrowExceptionWhenResourceFileNotFound() {
@@ -90,18 +91,21 @@ public class JsonObjectBuilderTest {
 	}
 
 	@Test
-	void shouldDeserializeSinglePropertyToClassObject() {
+	void shouldDeserializeSinglePropertyToClassObject() throws NullJsonObjectException {
 
 		String jsonString = JsonObjectTestHelper.createJsonString(
 				Map.of("jsonProperty", "1")
 		);
-		List<TestJsonObject> jsonObjects = JsonObjectBuilder.<TestJsonObject>create()
+		Optional<List<TestJsonObject>> oJsonObjects = JsonObjectBuilder.<TestJsonObject>create()
 				.ofType(TestJsonObject.class)
 				.withListTypeToken(new TypeToken<>() {})
 				.buildAsList(jsonString);
 
-		TestJsonObject jsonObject = jsonObjects.get(0);
+		Assertions.assertTrue(oJsonObjects.isPresent());
+		List<TestJsonObject> jsonObjects = oJsonObjects.get();
 		Assertions.assertEquals(1, jsonObjects.size());
+
+		TestJsonObject jsonObject = jsonObjects.get(0);
 		Assertions.assertEquals("1", jsonObject.jsonProperty);
 		Assertions.assertNull(jsonObject.pseudoProperty);
 	}
@@ -112,13 +116,14 @@ public class JsonObjectBuilderTest {
 		String jsonString = String.join("",
 				List.of("[", "{", "}", "]")
 		);
-		List<TestJsonObject> jsonObjects = JsonObjectBuilder.<TestJsonObject>create()
+		Optional<List<TestJsonObject>> oJsonObjects = JsonObjectBuilder.<TestJsonObject>create()
 				.ofType(TestJsonObject.class)
 				.withListTypeToken(new TypeToken<>() {})
 				.withDeserializer(TestJsonObjectDeserializer.class)
 				.buildAsList(jsonString);
 
-		TestJsonObject jsonObject = jsonObjects.get(0);
+		Assertions.assertTrue(oJsonObjects.isPresent());
+		TestJsonObject jsonObject = oJsonObjects.get().get(0);
 		Assertions.assertEquals("2", jsonObject.jsonProperty);
 		Assertions.assertEquals("value", jsonObject.pseudoProperty);
 	}

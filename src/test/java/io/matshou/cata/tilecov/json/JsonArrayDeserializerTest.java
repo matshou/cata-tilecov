@@ -2,6 +2,7 @@ package io.matshou.cata.tilecov.json;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,7 @@ import org.junit.jupiter.api.function.Executable;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
-@SuppressWarnings({ "SpellCheckingInspection", "ConstantConditions" })
+@SuppressWarnings("SpellCheckingInspection")
 public class JsonArrayDeserializerTest {
 
 	@SuppressWarnings("unused")
@@ -47,13 +48,14 @@ public class JsonArrayDeserializerTest {
 		String jsonString = JsonObjectTestHelper.createJsonString(Map.of(
 				"nonarrayprop", "value"
 		));
-		List<TestJsonObject> jsonObjects =
-				JsonObjectBuilder.<TestJsonObject>create()
-						.ofType(TestJsonObject.class)
-						.withDeserializer(TestJsonDeserializer.class)
-						.withListTypeToken(new TypeToken<>() {})
-						.buildAsList(jsonString);
+		Optional<List<TestJsonObject>> oJsonObjects = JsonObjectBuilder.<TestJsonObject>create()
+				.ofType(TestJsonObject.class)
+				.withDeserializer(TestJsonDeserializer.class)
+				.withListTypeToken(new TypeToken<>() {})
+				.buildAsList(jsonString);
 
+		Assertions.assertTrue(oJsonObjects.isPresent());
+		List<TestJsonObject> jsonObjects = oJsonObjects.get();
 		Assertions.assertEquals(1, jsonObjects.size());
 		TestJsonObject jsonObject = jsonObjects.get(0);
 
@@ -68,13 +70,14 @@ public class JsonArrayDeserializerTest {
 		String jsonString = JsonObjectTestHelper.createJsonString(Map.of(
 				"arrayorstringprop", "[ \"value1\", \"value2\", \"value3\"]"
 		));
-		List<TestJsonObject> jsonObjects =
-				JsonObjectBuilder.<TestJsonObject>create()
-						.ofType(TestJsonObject.class)
-						.withDeserializer(TestJsonDeserializer.class)
-						.withListTypeToken(new TypeToken<>() {})
-						.buildAsList(jsonString);
+		Optional<List<TestJsonObject>> oJsonObjects = JsonObjectBuilder.<TestJsonObject>create()
+				.ofType(TestJsonObject.class)
+				.withDeserializer(TestJsonDeserializer.class)
+				.withListTypeToken(new TypeToken<>() {})
+				.buildAsList(jsonString);
 
+		Assertions.assertTrue(oJsonObjects.isPresent());
+		List<TestJsonObject> jsonObjects = oJsonObjects.get();
 		Assertions.assertEquals(1, jsonObjects.size());
 		TestJsonObject jsonObject = jsonObjects.get(0);
 
@@ -103,13 +106,14 @@ public class JsonArrayDeserializerTest {
 		String noFailJsonString = JsonObjectTestHelper.createJsonString(Map.of(
 				"mismatchedProperty", "[\"value1\", \"value2\"]"
 		));
-		List<TestJsonObject> jsonObjects =
-				JsonObjectBuilder.<TestJsonObject>create()
-						.ofType(TestJsonObject.class)
-						.withDeserializer(TestJsonDeserializer.class)
-						.withListTypeToken(new TypeToken<>() {})
-						.buildAsList(noFailJsonString);
+		Optional<List<TestJsonObject>> oJsonObjects = JsonObjectBuilder.<TestJsonObject>create()
+				.ofType(TestJsonObject.class)
+				.withDeserializer(TestJsonDeserializer.class)
+				.withListTypeToken(new TypeToken<>() {})
+				.buildAsList(noFailJsonString);
 
+		Assertions.assertTrue(oJsonObjects.isPresent());
+		List<TestJsonObject> jsonObjects = oJsonObjects.get();
 		Assertions.assertEquals(1, jsonObjects.size());
 		TestJsonObject jsonObject = jsonObjects.get(0);
 
@@ -138,13 +142,14 @@ public class JsonArrayDeserializerTest {
 		String jsonArraysString = JsonObjectTestHelper.createJsonString(Map.of(
 				"notAnnotatedProperty", "[ \"value1\", \"value2\", \"value3\"]"
 		));
-		List<TestJsonObject> jsonObjects =
-				JsonObjectBuilder.<TestJsonObject>create()
-						.ofType(TestJsonObject.class)
-						.withDeserializer(TestJsonDeserializer.class)
-						.withListTypeToken(new TypeToken<>() {})
-						.buildAsList(jsonArraysString);
+		Optional<List<TestJsonObject>> oJsonObjects = JsonObjectBuilder.<TestJsonObject>create()
+				.ofType(TestJsonObject.class)
+				.withDeserializer(TestJsonDeserializer.class)
+				.withListTypeToken(new TypeToken<>() {})
+				.buildAsList(jsonArraysString);
 
+		Assertions.assertTrue(oJsonObjects.isPresent());
+		List<TestJsonObject> jsonObjects = oJsonObjects.get();
 		Assertions.assertEquals(1, jsonObjects.size());
 		TestJsonObject jsonObject = jsonObjects.get(0);
 

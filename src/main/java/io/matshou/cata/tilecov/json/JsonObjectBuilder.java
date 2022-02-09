@@ -5,6 +5,7 @@ import java.lang.reflect.Constructor;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
@@ -128,18 +129,18 @@ public class JsonObjectBuilder<T> {
 	 * Build JSON object by deserializing the JSON file under given path.
 	 *
 	 * @param jsonPath path to JSON file as resource.
-	 * @return list of JSON objects as result of deserializing a JSON file
-	 * or {@code null} f json is null or if json is empty.
+	 * @return optional containing list of JSON objects as result of deserializing the file under given path.
 	 *
-	 * @throws IOException if an exception occurred while creating new {@code BufferedReader}.
+	 * @throws IOException if an exception occurred while handling streams.
 	 * @throws FileNotFoundException when the resource under given path was not found.
 	 * @throws IllegalStateException if needed builder members are not initialized.
+	 * @throws JsonSyntaxException when there was an error while parsing the object.
 	 */
-	public @Nullable List<T> buildAsList(Path jsonPath) throws IOException, IllegalStateException {
+	public Optional<List<T>> buildAsList(Path jsonPath) throws IOException {
 
 		GsonBuilder builder = startBuildFromPath();
 		try (Reader reader = readJsonFromPath(jsonPath)) {
-			return builder.create().fromJson(reader, typeToken.getType());
+			return Optional.ofNullable(builder.create().fromJson(reader, typeToken.getType()));
 		}
 	}
 
@@ -147,18 +148,18 @@ public class JsonObjectBuilder<T> {
 	 * Build JSON object by deserializing the JSON file under given path.
 	 *
 	 * @param jsonPath path to JSON file as resource.
-	 * @return JSON object as result of deserializing a JSON file
-	 * or {@code null} f json is null or if json is empty.
+	 * @return optional containing JSON object as result of deserializing the file under given path.
 	 *
-	 * @throws IOException if an exception occurred while creating new {@code BufferedReader}.
+	 * @throws IOException if an exception occurred while handling streams.
 	 * @throws FileNotFoundException when the resource under given path was not found.
 	 * @throws IllegalStateException if needed builder members are not initialized.
+	 * @throws JsonSyntaxException when there was an error while parsing the object.
 	 */
-	public @Nullable T build(Path jsonPath) throws IOException, IllegalStateException {
+	public Optional<T> build(Path jsonPath) throws IOException {
 
 		GsonBuilder builder = startBuildFromPath();
 		try (Reader reader = readJsonFromPath(jsonPath)) {
-			return builder.create().fromJson(reader, typeToken.getType());
+			return Optional.ofNullable(builder.create().fromJson(reader, typeToken.getType()));
 		}
 	}
 
@@ -192,16 +193,15 @@ public class JsonObjectBuilder<T> {
 	 * set for this builder is of type {@link List} otherwise an exception will be thrown.
 	 *
 	 * @param json string to deserialize.
-	 * @return list of JSON objects as result of deserializing the string
-	 * or {@code null} f json is null or if json is empty.
+	 * @return optional containing list of JSON objects as result of deserializing the string.
 	 *
 	 * @throws IllegalStateException if needed builder members are not initialized.
-	 * @throws JsonSyntaxException when there was an error while building the object.
+	 * @throws JsonSyntaxException when there was an error while parsing the object.
 	 */
-	public @Nullable List<T> buildAsList(String json) throws IllegalStateException {
+	public Optional<List<T>> buildAsList(String json) {
 
 		GsonBuilder builder = startBuildFromString();
-		return builder.create().fromJson(json, typeToken.getType());
+		return Optional.ofNullable(builder.create().fromJson(json, typeToken.getType()));
 	}
 
 	/**
@@ -211,15 +211,14 @@ public class JsonObjectBuilder<T> {
 	 * set for this builder is NOT of type {@link List} otherwise an exception will be thrown.
 	 *
 	 * @param json string to deserialize.
-	 * @return JSON object as result of deserializing the string
-	 * or {@code null} f json is null or if json is empty.
+	 * @return optional containing JSON object as result of deserializing the string.
 	 *
 	 * @throws IllegalStateException if needed builder members are not initialized.
-	 * @throws JsonSyntaxException when there was an error while building the object.
+	 * @throws JsonSyntaxException when there was an error while parsing the object.
 	 */
-	public @Nullable T build(String json) throws IllegalStateException {
+	public Optional<T> build(String json) {
 
 		GsonBuilder builder = startBuildFromString();
-		return builder.create().fromJson(json, typeToken.getType());
+		return Optional.ofNullable(builder.create().fromJson(json, typeToken.getType()));
 	}
 }

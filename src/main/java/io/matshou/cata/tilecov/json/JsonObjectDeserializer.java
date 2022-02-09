@@ -57,12 +57,14 @@ abstract class JsonObjectDeserializer<T> extends JsonArrayDeserializer<T> {
 	 * Deserialize target fields annotated with {@link SerializedObjectName} annotation.
 	 *
 	 * @param gson {@code GSon} used in deserializing.
-	 * @param jsonObject object to search for given entry element.
+	 * @param object object to search for given entry element.
 	 * @param target target of array deserialization.
 	 * @param entry name of the json element to deserialize.
+	 *
+	 * @throws NullJsonObjectException when deserializing JSON object unexpectedly returned {@code null}.
 	 */
 	@Contract(mutates = "param3")
-	abstract void deserializeObjectMembers(Gson gson, JsonObject jsonObject, T target, String entry);
+	abstract void deserializeObjectMembers(Gson gson, JsonObject object, T target, String entry);
 
 	@Override
 	public T deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {

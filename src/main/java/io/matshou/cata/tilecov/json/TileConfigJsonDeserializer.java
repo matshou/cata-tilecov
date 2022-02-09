@@ -3,11 +3,11 @@ package io.matshou.cata.tilecov.json;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 /**
@@ -20,33 +20,36 @@ public class TileConfigJsonDeserializer extends JsonObjectDeserializer<TileConfi
 	}
 
 	@Override
-	void deserializeObjectMembers(Gson gson, JsonObject jsonObject, TileConfigJsonObject target, String entry) {
+	void deserializeObjectMembers(Gson gson, JsonObject object, TileConfigJsonObject target, String entry) {
 
-		JsonElement element = jsonObject.get(entry);
+		JsonElement element = object.get(entry);
 		if (element == null) {
 			return;
 		}
 		if (entry.equals("tile_info")) {
-			List<TileInfoJsonObject> jsonObjects = JsonObjectBuilder.<TileInfoJsonObject>create()
+			Optional<List<TileInfoJsonObject>> jsonObjects = JsonObjectBuilder.<TileInfoJsonObject>create()
 					.ofType(TileInfoJsonObject.class)
 					.withListTypeToken(new TypeToken<>() {})
 					.buildAsList(element.toString());
 
-			if (jsonObjects == null) {
-				throw new JsonSyntaxException("Cannot find tile_info json property");
-			}
 			Field field = Objects.requireNonNull(jsonObjectFields.get("tile_info"));
-			changeFieldValue(field, target, jsonObjects.get(0));
+			if (jsonObjects.isEmpty()) {
+				throw new NullJsonObjectException("tile_info", TileInfoJsonObject.class);
+			}
+			changeFieldValue(field, target, jsonObjects.get().get(0));
 		}
 		else if (entry.equals("tiles-new")) {
-			List<TileAtlasJsonObject> jsonObjects = JsonObjectBuilder.<TileAtlasJsonObject>create()
+			Optional<List<TileAtlasJsonObject>> jsonObjects = JsonObjectBuilder.<TileAtlasJsonObject>create()
 					.ofType(TileAtlasJsonObject.class)
 					.withListTypeToken(new TypeToken<>() {})
 					.withDeserializer(TileAtlasJsonDeserializer.class)
 					.buildAsList(element.toString());
 
 			Field field = Objects.requireNonNull(jsonObjectFields.get("tiles-new"));
-			changeFieldValue(field, target, jsonObjects);
+			if (jsonObjects.isEmpty()) {
+				throw new NullJsonObjectException("tiles-new", TileAtlasJsonObject.class);
+			}
+			changeFieldValue(field, target, jsonObjects.get());
 		}
 	}
 }
