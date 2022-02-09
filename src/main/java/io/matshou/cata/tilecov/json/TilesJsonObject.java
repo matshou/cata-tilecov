@@ -16,20 +16,20 @@ import com.google.common.collect.ImmutableList;
 public class TilesJsonObject {
 
     @SerializedArrayName("id")
-    private @Nullable List<String> id;
+    private @Nullable List<String> tileId;
 
     @SerializedArrayName("fg")
-    private @Nullable List<String> fg;
+    private @Nullable List<String> tileFg;
 
     @SerializedArrayName("bg")
-    private @Nullable List<String> bg;
+    private @Nullable List<String> tileBg;
 
     /**
      * @return ID of the objects that will be mapped to this tile
      * or an empty list if the property has not been defined.
      */
-    public ImmutableList<String> getId() {
-        return id != null ? ImmutableList.copyOf(id) : ImmutableList.of();
+    public ImmutableList<String> getTileId() {
+        return tileId != null ? ImmutableList.copyOf(tileId) : ImmutableList.of();
     }
 
     /**
@@ -37,7 +37,7 @@ public class TilesJsonObject {
      * or an empty list if the property has not been defined.
      */
     public ImmutableList<String> getForegroundIndex() {
-        return fg != null ? ImmutableList.copyOf(fg) : ImmutableList.of();
+        return tileFg != null ? ImmutableList.copyOf(tileFg) : ImmutableList.of();
     }
 
     /**
@@ -45,6 +45,6 @@ public class TilesJsonObject {
      * or an empty list if the property has not been defined.
      */
     public ImmutableList<String> getBackgroundIndex() {
-        return bg != null ? ImmutableList.copyOf(bg) : ImmutableList.of();
+        return tileBg != null ? ImmutableList.copyOf(tileBg) : ImmutableList.of();
     }
 }
