@@ -9,6 +9,9 @@ spotless {
 		// Include only java source files
 		target 'src/*/java/**/*.java'
 
+		// Enable spotless:off and spotless:on
+		toggleOffOn()
+
 		// A sequence of package names
 		importOrder 'java', 'javax', 'org', 'com', 'com.diffplug', '', '\\#'
 
