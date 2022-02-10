@@ -27,7 +27,9 @@
     "harvest": "exempt",
     "death_function": [ "MELT" ],
     "regenerates": 50,
-    "flags": [ "NOHEAD", "SEES", "POISON", "HEARS", "SMELLS", "SLUDGEPROOF", "SLUDGETRAIL", "SWIMS", "FLAMMABLE", "NOGIB" ]
+    "flags": [
+      "NOHEAD", "SEES", "POISON", "HEARS", "SMELLS", "SLUDGEPROOF", "SLUDGETRAIL", "SWIMS", "FLAMMABLE", "NOGIB"
+    ]
   },
   {
     "id": "mon_slug_giant",

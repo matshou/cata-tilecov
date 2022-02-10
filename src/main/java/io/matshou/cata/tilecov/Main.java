@@ -44,7 +44,7 @@ public class Main {
 			@Override
 			void validate(String value) {
 				// game directory has to exist and be an actual directory
-				File gameDirectory = ((Path)getAsObject(value)).toFile();
+				File gameDirectory = ((Path) getAsObject(value)).toFile();
 				if (!gameDirectory.exists()) {
 					throw new IllegalArgumentException("Game directory does not exist: " + value);
 				}
@@ -68,6 +68,7 @@ public class Main {
 		 * Validate the given argument value for this argument.
 		 *
 		 * @param value argument value to validate.
+		 *
 		 * @throws IllegalArgumentException if value fails validation.
 		 */
 		abstract void validate(String value) throws IllegalArgumentException;
@@ -97,6 +98,7 @@ public class Main {
 	 * Parse, validate and store given application arguments.
 	 *
 	 * @param args array of arguments to handle.
+	 *
 	 * @throws IllegalArgumentException when any application argument is malformed.
 	 * @throws IllegalStateException when missing non-optional application argument.
 	 */

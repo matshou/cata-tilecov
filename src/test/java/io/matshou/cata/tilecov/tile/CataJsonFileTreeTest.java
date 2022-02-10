@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,10 +24,10 @@ import io.matshou.cata.tilecov.json.CataJsonObject;
 public class CataJsonFileTreeTest {
 
 	private static final String[] JSON_FILES_PATHS = {
-		"data/json/furniture_and_terrain/furniture.json",
-		"data/json/items/fluff.json",
-		"data/json/monsters/slugs.json",
-		"data/json/vehicles/vehicles.json"
+			"data/json/furniture_and_terrain/furniture.json",
+			"data/json/items/fluff.json",
+			"data/json/monsters/slugs.json",
+			"data/json/vehicles/vehicles.json"
 	};
 	private Path testTempDir;
 
