@@ -40,15 +40,15 @@ public class MainTest {
 
 		// app arguments are not supplied
 		Assertions.assertThrows(IllegalStateException.class, () ->
-				Main.main(new String[]{})
+				Main.handleAppArgs(new String[]{})
 		);
 		// app arguments are empty
 		Assertions.assertThrows(IllegalStateException.class, () ->
-				Main.main(new String[]{ "" })
+				Main.handleAppArgs(new String[]{ "" })
 		);
 		// non-optional app argument is empty
 		Assertions.assertThrows(IllegalStateException.class, () ->
-				Main.main(new String[]{ GAME_DIRECTORY + '=' })
+				Main.handleAppArgs(new String[]{ GAME_DIRECTORY + '=' })
 		);
 	}
 
@@ -57,23 +57,23 @@ public class MainTest {
 
 		// app arguments have no delimiter
 		Assertions.assertThrows(IllegalArgumentException.class, () ->
-				Main.main(new String[]{ "arg1 value1 arg2 value2" })
+				Main.handleAppArgs(new String[]{ "arg1 value1 arg2 value2" })
 		);
 		// app arguments have no value
 		Assertions.assertThrows(IllegalArgumentException.class, () ->
-				Main.main(new String[]{ "arg1value1 arg2value2" })
+				Main.handleAppArgs(new String[]{ "arg1value1 arg2value2" })
 		);
 		// app arguments are using wrong delimiter
 		Assertions.assertThrows(IllegalArgumentException.class, () ->
-				Main.main(new String[]{ "arg1-value1 arg2~value2" })
+				Main.handleAppArgs(new String[]{ "arg1-value1 arg2~value2" })
 		);
 		// app arguments are separated by comma
 		Assertions.assertThrows(IllegalArgumentException.class, () ->
-				Main.main(new String[]{ "arg1=value1,arg2=value2" })
+				Main.handleAppArgs(new String[]{ "arg1=value1,arg2=value2" })
 		);
 		// app arguments are properly formatted
 		Assertions.assertThrows(IllegalArgumentException.class, () ->
-				Main.main(new String[]{ "arg1=value1 arg2=value2" })
+				Main.handleAppArgs(new String[]{ "arg1=value1 arg2=value2" })
 		);
 	}
 
@@ -86,7 +86,7 @@ public class MainTest {
 		String GAME_DIRECTORY_SYS = Main.Argument.GAME_DIRECTORY.sysPropName;
 		System.setProperty(GAME_DIRECTORY_SYS, systemCataDir.toString());
 
-		Main.main(new String[]{ GAME_DIRECTORY + '=' + appCataDir });
+		Main.handleAppArgs(new String[]{ GAME_DIRECTORY + '=' + appCataDir });
 		Assertions.assertEquals(systemCataDir, Main.getGameDirectory());
 
 		// when property is not cleared other tests will fail
@@ -97,7 +97,7 @@ public class MainTest {
 	void shouldParseApplicationArgumentAsObjects(@TempDir Path tempDir) {
 
 		Path cataDirPath = assertDirectoryCreated(tempDir, "data/cata");
-		Main.main(new String[]{ GAME_DIRECTORY + '=' + cataDirPath });
+		Main.handleAppArgs(new String[]{ GAME_DIRECTORY + '=' + cataDirPath });
 		Assertions.assertEquals(cataDirPath, Main.getGameDirectory());
 	}
 
@@ -109,14 +109,14 @@ public class MainTest {
 
 		// argument value is a non-existing directory
 		Assertions.assertThrows(IllegalArgumentException.class, () ->
-				Main.main(new String[]{ GAME_DIRECTORY + "=" + tempDir.resolve("pseudo/path") })
+				Main.handleAppArgs(new String[]{ GAME_DIRECTORY + "=" + tempDir.resolve("pseudo/path") })
 		);
 		Path filePath = tempDir.resolve(".file");
 		Assertions.assertTrue(filePath.toFile().createNewFile());
 
 		// argument value is not a valid directory
 		Assertions.assertThrows(IllegalArgumentException.class, () ->
-				Main.main(new String[]{ GAME_DIRECTORY + "=" + filePath })
+				Main.handleAppArgs(new String[]{ GAME_DIRECTORY + "=" + filePath })
 		);
 	}
 }

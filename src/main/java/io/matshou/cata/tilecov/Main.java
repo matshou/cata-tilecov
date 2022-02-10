@@ -89,6 +89,19 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 
+		// parse and validate app arguments
+		handleAppArgs(args);
+	}
+
+	/**
+	 * Parse, validate and store given application arguments.
+	 *
+	 * @param args array of arguments to handle.
+	 * @throws IllegalArgumentException when any application argument is malformed.
+	 * @throws IllegalStateException when missing non-optional application argument.
+	 */
+	static void handleAppArgs(String[] args) {
+
 		// parse application arguments and create a map of properties
 		Map<String, String> appArgs = new HashMap<>();
 		for (String argEntry : args) {
