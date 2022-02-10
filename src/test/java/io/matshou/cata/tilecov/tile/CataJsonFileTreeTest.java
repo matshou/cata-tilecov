@@ -83,4 +83,28 @@ public class CataJsonFileTreeTest {
 			Assertions.assertFalse(actual.retainAll(expected));
 		}
 	}
+
+	@Test
+	void shouldRespectWhitelistWhenBuildingFileTree() throws IOException {
+
+		Set<Path> whitelistDirectories = Set.of(
+				Paths.get("data/json/items/"),
+				Paths.get("data/json/monsters/")
+		);
+		CataJsonFileTree fileTree = new CataJsonFileTree(testTempDir, whitelistDirectories);
+		Set<Path> expectedPaths = Set.of(
+				Paths.get("data/json/items/fluff.json"),
+				Paths.get("data/json/monsters/slugs.json")
+		);
+		for (Path expectedPath : expectedPaths) {
+			Assertions.assertFalse(fileTree.getJsonObjects(expectedPath).isEmpty());
+		}
+		Set<Path> unexpectedPaths = Set.of(
+				Paths.get("data/json/furniture_and_terrain/furniture.json"),
+				Paths.get("data/json/vehicles/vehicles.json")
+		);
+		for (Path unexpectedPath : unexpectedPaths) {
+			Assertions.assertTrue(fileTree.getJsonObjects(unexpectedPath).isEmpty());
+		}
+	}
 }

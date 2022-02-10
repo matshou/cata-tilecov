@@ -5,10 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableMap;
@@ -29,16 +27,31 @@ public class CataJsonFileTree {
 
 	private final ImmutableMap<Path, ImmutableSet<CataJsonObject>> fileTreeMap;
 
+	private static boolean shouldIncludeInTree(Path path, BasicFileAttributes attributes, Set<Path> whitelist) {
+
+		// only json files should be included
+		if (!attributes.isRegularFile() || !path.toString().endsWith(".json")) {
+			return false;
+		}
+		Path parent = path.getParent();
+		// path has to have a parent directory path that is whitelisted
+		return whitelist.isEmpty() || (parent != null && whitelist.contains(parent));
+	}
+
 	/**
 	 * Construct and populate a JSON file-tree for given directory path.
 	 *
 	 * @param path path to directory as starting point for mapping file tree.
+	 * @param whitelist {@code Set} of directories to consider including in file tree.
+	 * When whitelist is specified all paths that do not start with any whitelisted directory
+	 * path will be excluded from the file tree.
+	 *
 	 * @throws IOException when an I/O exception occurs while walking files or building JSON object.
 	 * @throws FileNotFoundException when given path does not point to an existing file.
 	 * @throws IllegalArgumentException when given path does not represent a valid directory.
 	 * @throws NullJsonObjectException when building a JSON object returns {@code null}.
 	 */
-	public CataJsonFileTree(Path path) throws IOException, NullJsonObjectException {
+	public CataJsonFileTree(Path path, Set<Path> whitelist) throws IOException, NullJsonObjectException {
 
 		File fileTreeDir = path.toFile();
 		if (!fileTreeDir.exists()) {
@@ -49,7 +62,7 @@ public class CataJsonFileTree {
 		}
 		Map<Path, ImmutableSet<CataJsonObject>> tempFileTree = new HashMap<>();
 		for (Path jsonFile : Files.find(path, 10, (p, bfa) ->
-				bfa.isRegularFile() && p.toString().endsWith(".json")).collect(Collectors.toSet())) {
+				shouldIncludeInTree(path.relativize(p), bfa, whitelist)).collect(Collectors.toSet())) {
 
 			// deserialize the json file under found path
 			Optional<List<CataJsonObject>> cataJsonObjects = JsonObjectBuilder.<CataJsonObject>create()
@@ -74,7 +87,21 @@ public class CataJsonFileTree {
 	}
 
 	/**
-	 * Get {@code CataJsonObject}'s registered for given path.
+	 * Construct and populate a JSON file-tree for given directory path.
+	 *
+	 * @param path path to directory as starting point for mapping file tree.
+	 *
+	 * @throws IOException when an I/O exception occurs while walking files or building JSON object.
+	 * @throws FileNotFoundException when given path does not point to an existing file.
+	 * @throws IllegalArgumentException when given path does not represent a valid directory.
+	 * @throws NullJsonObjectException when building a JSON object returns {@code null}.
+	 */
+	public CataJsonFileTree(Path path) throws IOException {
+		this(path, Set.of());
+	}
+
+	/**
+	 * Get {@code CataJsonObject}'s registered under given directory path.
 	 *
 	 * @param path path to directory to get the files for.
 	 * @return immutable list of objects representing JSON files in given directory
@@ -82,7 +109,12 @@ public class CataJsonFileTree {
 	 */
 	public ImmutableSet<CataJsonObject> getJsonObjects(Path path) {
 
-		ImmutableSet<CataJsonObject> result = fileTreeMap.get(path);
-		return result != null ? result : ImmutableSet.of();
+		Set<CataJsonObject> result = new HashSet<>();
+		for (Map.Entry<Path, ImmutableSet<CataJsonObject>> entry : fileTreeMap.entrySet()) {
+			if (entry.getKey().startsWith(path)) {
+				result.addAll(entry.getValue());
+			}
+		}
+		return ImmutableSet.copyOf(result);
 	}
 }
