@@ -20,12 +20,15 @@ package io.matshou.cata.tilecov.json;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 
 abstract class JsonObjectDeserializer<T> extends JsonArrayDeserializer<T> {
 
@@ -68,6 +71,31 @@ abstract class JsonObjectDeserializer<T> extends JsonArrayDeserializer<T> {
 		catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	/**
+	 * Deserialize JSON property with given name from specified {@code JsonElement}.
+	 *
+	 * @param element {@code JsonElement} to deserialize.
+	 * @param target instance of {@code T} that will store the result.
+	 * @param name name of the property to find and deserialize.
+	 */
+	void deserializeObjectProperty(JsonElement element, T target, String name) {
+
+		Field field = Objects.requireNonNull(jsonObjectFields.get(name));
+		if (element.isJsonPrimitive()) {
+			changeFieldValue(field, target, new JsonObjectProperty(element.getAsString()));
+			return;
+		}
+		Optional<JsonObjectProperty> jsonObjectProperty = JsonObjectBuilder.<JsonObjectProperty>create()
+				.ofType(JsonObjectProperty.class)
+				.withTypeToken(new TypeToken<>() {})
+				.build(element.toString());
+
+		if (jsonObjectProperty.isEmpty()) {
+			throw new NullJsonObjectException(name, TilesJsonObject.class);
+		}
+		changeFieldValue(field, target, jsonObjectProperty.get());
 	}
 
 	/**

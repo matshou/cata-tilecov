@@ -18,18 +18,18 @@
 package io.matshou.cata.tilecov.json;
 
 /**
- * This class represents JSON object name.
+ * This object represents a JSON property that holds {@code str} string value.
  */
-public class CataJsonObjectName {
+public class JsonObjectProperty {
 
 	private final String str;
 
-	CataJsonObjectName(String value) {
+	JsonObjectProperty(String value) {
 		str = value;
 	}
 
 	/**
-	 * @return name of the JSON object.
+	 * @return property value held by this JSON object.
 	 */
 	public String get() {
 		return str;

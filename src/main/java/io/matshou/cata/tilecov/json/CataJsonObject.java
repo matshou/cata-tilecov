@@ -17,6 +17,7 @@
  */
 package io.matshou.cata.tilecov.json;
 
+import java.util.List;
 import java.util.Map;
 
 import org.jetbrains.annotations.Nullable;
@@ -32,10 +33,16 @@ import com.google.gson.annotations.SerializedName;
 @SuppressWarnings("unused")
 public class CataJsonObject {
 
-	private @Nullable String type, id, description;
+	private @Nullable String type;
+
+	@SerializedArrayName("id")
+	private @Nullable List<String> objectIds;
+
+	@SerializedObjectName("description")
+	private @Nullable JsonObjectProperty objectDescription;
 
 	@SerializedObjectName("name")
-	private @Nullable CataJsonObjectName objectName;
+	private @Nullable JsonObjectProperty objectName;
 
 	@SerializedArrayName("color")
 	private @Nullable java.util.List<String> fgColor;
@@ -78,7 +85,7 @@ public class CataJsonObject {
 	 * or an empty string if id is not defined.
 	 */
 	public String getId() {
-		return id != null ? id : "";
+		return objectIds != null && objectIds.size() > 0 ? objectIds.get(0) : "";
 	}
 
 	/**
@@ -93,7 +100,7 @@ public class CataJsonObject {
 	 * or an empty string if description is not defined.
 	 */
 	public String getDescription() {
-		return description != null ? description : "";
+		return objectDescription != null ? objectDescription.get() : "";
 	}
 
 	/**
