@@ -31,7 +31,7 @@ import com.google.gson.annotations.SerializedName;
  * Information here is needed to generate tile coverage metrics.
  */
 @SuppressWarnings("unused")
-public class CataJsonObject {
+public class CataJsonObject implements CataIdentifiable {
 
 	private @Nullable String type;
 
@@ -59,10 +59,14 @@ public class CataJsonObject {
 	@Override
 	public String toString() {
 		java.util.Map<String, String> mappedData = ImmutableMap.of(
-				"type", getType(), "id", getId(), "name", getName(),
-				"desc", getDescription(), "color", getForegroundColor().toString(),
+				"type", getType(),
+				"id", "[ " + String.join(",", getIds()) + " ]",
+				"name", getName(),
+				"desc", getDescription(),
+				"color", getForegroundColor().toString(),
 				"bgcolor", getBackgroundColor().toString(),
-				"looks_like", looksLikeWhat(), "copy-from", copyFromWhat()
+				"looks_like", looksLikeWhat(),
+				"copy-from", copyFromWhat()
 		);
 		StringBuilder sb = new StringBuilder();
 		for (Map.Entry<String, String> entry : mappedData.entrySet()) {
@@ -81,11 +85,11 @@ public class CataJsonObject {
 	}
 
 	/**
-	 * @return id of the object, this will be unique among all objects of that type
-	 * or an empty string if id is not defined.
+	 * @return id entries associated with the object, they will be unique among all objects of that type
+	 * or an empty list if id entries are not defined.
 	 */
-	public String getId() {
-		return objectIds != null && objectIds.size() > 0 ? objectIds.get(0) : "";
+	public ImmutableList<String> getIds() {
+		return objectIds != null ? ImmutableList.copyOf(objectIds) : ImmutableList.of();
 	}
 
 	/**

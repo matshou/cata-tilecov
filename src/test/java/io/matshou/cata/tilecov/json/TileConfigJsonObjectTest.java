@@ -90,7 +90,7 @@ public class TileConfigJsonObjectTest {
 
 		for (int i = 0; i < expectedTiles.size(); ++i) {
 			List<String> expected = new ArrayList<>(expectedTiles.get(i));
-			Assertions.assertFalse(expected.retainAll(tiles.get(i).getTileId()));
+			Assertions.assertFalse(expected.retainAll(tiles.get(i).getIds()));
 		}
 
 		// moretiles.png
@@ -101,7 +101,7 @@ public class TileConfigJsonObjectTest {
 
 		for (int i = 0; i < expectedTiles.size(); ++i) {
 			List<String> expected = new ArrayList<>(expectedTiles.get(i));
-			Assertions.assertFalse(expected.retainAll(moreTiles.get(i).getTileId()));
+			Assertions.assertFalse(expected.retainAll(moreTiles.get(i).getIds()));
 		}
 	}
 }

@@ -17,26 +17,17 @@
  */
 package io.matshou.cata.tilecov.json;
 
+import com.google.common.collect.ImmutableList;
+
 /**
- * This class represents a {@link CataJsonObject} filter
- * which can be used to filter object instance that do not meet certain conditions.
+ * This interface represents an object that hold identification entries.
+ * These identifiers can either be used to identify the object itself or others things.
+ * Note that the intention and usage of identifiers is not enforced by the interface contract.
  */
-public enum CataJsonObjectFilter {
+public interface CataIdentifiable {
 
 	/**
-	 * This filter can be used to filter out {@link CataJsonObject}
-	 * that do not have an id property assigned to them.
+	 * @return an immutable {@code List} of identification entries held by the object.
 	 */
-	NO_EMPTY_ID {
-		@Override
-		public boolean match(CataJsonObject value) {
-			return value.getId().isEmpty();
-		}
-	};
-
-	/**
-	 * @param value object instance to filter.
-	 * @return {@code true} if the given object matches the conditions of this filter.
-	 */
-	public abstract boolean match(CataJsonObject value);
+	ImmutableList<String> getIds();
 }

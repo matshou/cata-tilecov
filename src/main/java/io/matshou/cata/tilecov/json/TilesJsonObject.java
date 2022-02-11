@@ -30,7 +30,7 @@ import com.google.common.collect.ImmutableList;
  * Cataclysm: Bright Nights - Tileset: tile_config</a>
  */
 @SuppressWarnings("unused")
-public class TilesJsonObject {
+public class TilesJsonObject implements CataIdentifiable {
 
 	@SerializedArrayName("id")
 	private @Nullable List<String> tileId;
@@ -45,7 +45,7 @@ public class TilesJsonObject {
 	 * @return ID of the objects that will be mapped to this tile
 	 * or an empty list if the property has not been defined.
 	 */
-	public ImmutableList<String> getTileId() {
+	public ImmutableList<String> getIds() {
 		return tileId != null ? ImmutableList.copyOf(tileId) : ImmutableList.of();
 	}
 

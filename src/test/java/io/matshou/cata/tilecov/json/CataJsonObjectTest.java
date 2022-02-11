@@ -65,7 +65,7 @@ public class CataJsonObjectTest {
 			Assertions.assertEquals(expectedType, cataJsonObject.getType());
 
 			String expectedId = expectedValues[i + 1];
-			Assertions.assertEquals(expectedId, cataJsonObject.getId());
+			Assertions.assertEquals('[' + expectedId + ']', cataJsonObject.getIds().toString());
 
 			String expectedName = expectedValues[i + 2];
 			Assertions.assertEquals(expectedName, cataJsonObject.getName());

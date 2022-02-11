@@ -132,7 +132,7 @@ public class CataJsonFileTree {
 	 * @return immutable list of objects representing JSON files in given directory
 	 * or an empty {@code Set} if no JSON objects are mapped to given path.
 	 */
-	public Set<CataJsonObject> getJsonObjects(Path path, CataJsonObjectFilter... filters) {
+	public Set<CataJsonObject> getJsonObjects(Path path, CataIdentifiableFilter... filters) {
 
 		Set<CataJsonObject> result = new HashSet<>();
 		for (Map.Entry<Path, ImmutableSet<CataJsonObject>> entry : fileTreeMap.entrySet()) {
@@ -149,7 +149,7 @@ public class CataJsonFileTree {
 	 * @return {@code Set} of id's that correspond to {@link CataJsonObject}
 	 * * instances that are found in this file tree.
 	 */
-	public Set<String> getObjectIds(CataJsonObjectFilter... filters) {
+	public Set<String> getObjectIds(CataIdentifiableFilter... filters) {
 
 		Set<CataJsonObject> filteredObjects = new HashSet<>();
 		for (Map.Entry<Path, ImmutableSet<CataJsonObject>> entry : fileTreeMap.entrySet()) {
@@ -157,7 +157,7 @@ public class CataJsonFileTree {
 					Arrays.stream(filters).noneMatch(f -> f.match(v))).collect(Collectors.toSet()));
 		}
 		Set<String> result = new HashSet<>();
-		filteredObjects.forEach(o -> result.add(o.getId()));
+		filteredObjects.forEach(o -> result.addAll(o.getIds()));
 		return result;
 	}
 }

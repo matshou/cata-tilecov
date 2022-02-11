@@ -15,7 +15,7 @@ import com.google.common.collect.ImmutableMap;
 
 import io.matshou.cata.tilecov.UnitTestResources;
 import io.matshou.cata.tilecov.json.CataJsonObject;
-import io.matshou.cata.tilecov.json.CataJsonObjectFilter;
+import io.matshou.cata.tilecov.json.CataIdentifiableFilter;
 
 public class CataJsonFileTreeTest extends UnitTestResources {
 
@@ -61,7 +61,7 @@ public class CataJsonFileTreeTest extends UnitTestResources {
 			Assertions.assertNotNull(expected);
 
 			Set<String> actual = new HashSet<>();
-			jsonObjects.forEach(o -> actual.add(o.getId()));
+			jsonObjects.forEach(o -> actual.addAll(o.getIds()));
 			Assertions.assertFalse(actual.retainAll(expected));
 		}
 	}
@@ -90,7 +90,7 @@ public class CataJsonFileTreeTest extends UnitTestResources {
 		CataJsonFileTree fileTree = new CataJsonFileTree(jsonDir, expected);
 		Assertions.assertFalse(fileTree.getJsonObjects(expected).isEmpty());
 
-		for (String objectId : fileTree.getObjectIds(CataJsonObjectFilter.NO_EMPTY_ID)) {
+		for (String objectId : fileTree.getObjectIds(CataIdentifiableFilter.NO_EMPTY_ID)) {
 			Assertions.assertFalse(objectId.isEmpty());
 		}
 	}
