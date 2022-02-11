@@ -1,0 +1,6 @@
+#Sample Tileset
+
+NAME: sample_tileset
+VIEW: SampleTileset
+JSON: tile_config.json
+TILESET: tiles.png

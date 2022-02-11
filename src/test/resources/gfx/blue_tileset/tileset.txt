@@ -1,0 +1,6 @@
+#Blue Tileset
+
+NAME: blue_tileset
+VIEW: BlueTileset
+JSON: tile_config.json
+TILESET: tiles.png

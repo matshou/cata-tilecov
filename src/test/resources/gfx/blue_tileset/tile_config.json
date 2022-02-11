@@ -1,0 +1,29 @@
+{
+  "tile_info": [
+    {
+      "height": 16,
+      "width": 16,
+      "iso": true,
+      "pixelscale": 1
+    }
+  ],
+  "tiles-new": [
+    {
+      "file": "tiles.png",
+      "tiles": [
+        {
+          "id": "mag_electronics",
+          "fg": 0,
+          "bg": 0,
+          "rotates": false
+        },
+        {
+          "id": "manual_electronics",
+          "fg": 0,
+          "bg": 0,
+          "rotates": true
+        }
+      ]
+    }
+  ]
+}

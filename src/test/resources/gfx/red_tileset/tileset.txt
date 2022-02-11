@@ -1,0 +1,6 @@
+#Red Tileset
+
+NAME: red_tileset
+VIEW: RedTileset
+JSON: tile_config.json
+TILESET: tiles.png
