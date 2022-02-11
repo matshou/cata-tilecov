@@ -42,7 +42,7 @@ public class TileConfigJsonObjectTest {
 				.ofType(TileConfigJsonObject.class)
 				.withTypeToken(new TypeToken<>() {})
 				.withDeserializer(TileConfigJsonDeserializer.class)
-				.build(Paths.get("tile_config.json"));
+				.build(Paths.get("gfx/sample_tileset/tile_config.json"));
 
 		Assertions.assertTrue(oTileConfig.isPresent());
 		tileConfig = oTileConfig.get();
