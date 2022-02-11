@@ -37,10 +37,14 @@ public enum CataIdentifiableFilter {
 		}
 	},
 
+	/**
+	 * This filter can be used to filter out {@link CataIdentifiable}
+	 * objects that have id's that start with {@code overlay_} prefix indicating they are overlays.
+	 */
 	NO_OVERLAYS {
 		@Override
 		public boolean match(CataIdentifiable identifiable) {
-			return identifiable.getIds().stream().anyMatch(i -> i.startsWith("_overlay"));
+			return identifiable.getIds().stream().anyMatch(i -> i.startsWith("overlay_"));
 		}
 	};
 
