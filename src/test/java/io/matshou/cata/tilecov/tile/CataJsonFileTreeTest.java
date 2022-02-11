@@ -16,10 +16,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Files;
 
 import io.matshou.cata.tilecov.json.CataJsonObject;
+import io.matshou.cata.tilecov.json.CataJsonObjectFilter;
 
 public class CataJsonFileTreeTest {
 
@@ -72,12 +72,12 @@ public class CataJsonFileTreeTest {
 				JSON_FILES_PATHS[3], Set.of("custom", "none")
 		);
 		for (String filePath : JSON_FILES_PATHS) {
-			ImmutableSet<CataJsonObject> jsonObjects = fileTree.getJsonObjects(Paths.get(filePath));
+			Set<CataJsonObject> jsonObjects = fileTree.getJsonObjects(Paths.get(filePath));
 			Assertions.assertFalse(jsonObjects.isEmpty());
 
 			Set<String> expected = expectedMapped.get(filePath);
-			Assertions.assertNotNull(expected
-			);
+			Assertions.assertNotNull(expected);
+
 			Set<String> actual = new HashSet<>();
 			jsonObjects.forEach(o -> actual.add(o.getId()));
 			Assertions.assertFalse(actual.retainAll(expected));
@@ -85,26 +85,31 @@ public class CataJsonFileTreeTest {
 	}
 
 	@Test
-	void shouldRespectWhitelistWhenBuildingFileTree() throws IOException {
+	void shouldBuildFileTreeForTargetDirectory() throws IOException {
 
-		Set<Path> whitelistDirectories = Set.of(
-				Paths.get("data/json/items/"),
-				Paths.get("data/json/monsters/")
-		);
-		CataJsonFileTree fileTree = new CataJsonFileTree(testTempDir, whitelistDirectories);
-		Set<Path> expectedPaths = Set.of(
-				Paths.get("data/json/items/fluff.json"),
-				Paths.get("data/json/monsters/slugs.json")
-		);
-		for (Path expectedPath : expectedPaths) {
-			Assertions.assertFalse(fileTree.getJsonObjects(expectedPath).isEmpty());
-		}
-		Set<Path> unexpectedPaths = Set.of(
+		Path expected = Paths.get("data/json/items/");
+		Path[] unexpectedPaths = new Path[]{
 				Paths.get("data/json/furniture_and_terrain/furniture.json"),
+				Paths.get("data/json/monsters/slugs.json"),
 				Paths.get("data/json/vehicles/vehicles.json")
-		);
-		for (Path unexpectedPath : unexpectedPaths) {
-			Assertions.assertTrue(fileTree.getJsonObjects(unexpectedPath).isEmpty());
+		};
+		CataJsonFileTree fileTree = new CataJsonFileTree(testTempDir, expected);
+		Assertions.assertFalse(fileTree.getJsonObjects(expected).isEmpty());
+
+		for (Path unexpected : unexpectedPaths) {
+			Assertions.assertTrue(fileTree.getJsonObjects(unexpected).isEmpty());
+		}
+	}
+
+	@Test
+	void shouldFilterOutObjectsThatHaveMissingId() throws IOException {
+
+		Path expected = Paths.get("data/json/furniture_and_terrain/");
+		CataJsonFileTree fileTree = new CataJsonFileTree(testTempDir, expected);
+		Assertions.assertFalse(fileTree.getJsonObjects(expected).isEmpty());
+
+		for (String objectId : fileTree.getObjectIds(CataJsonObjectFilter.NO_EMPTY_ID)) {
+			Assertions.assertFalse(objectId.isEmpty());
 		}
 	}
 }
