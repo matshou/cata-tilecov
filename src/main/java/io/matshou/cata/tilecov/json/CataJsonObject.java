@@ -19,6 +19,7 @@ package io.matshou.cata.tilecov.json;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -65,7 +66,7 @@ public class CataJsonObject implements CataIdentifiable {
 				"desc", getDescription(),
 				"color", getForegroundColor().toString(),
 				"bgcolor", getBackgroundColor().toString(),
-				"looks_like", looksLikeWhat(),
+				"looks_like", looksLike != null ? looksLike : "",
 				"copy-from", copyFromWhat()
 		);
 		StringBuilder sb = new StringBuilder();
@@ -126,18 +127,35 @@ public class CataJsonObject implements CataIdentifiable {
 	}
 
 	/**
-	 * Identification of a similar item that this item looks like
-	 * or an empty string if this property is not defined.
+	 * Optional containing the object with an identification of a similar item
+	 * that this object looks like or an empty optional if this property is not defined.
 	 * <p>
-	 * The tileset loader will try to load the tile
-	 * for that item if this item doesn't have a tile. {@code looks_like} entries are implicitly chained, so if
-	 * {@code 'throne'} has {@code looks_like} {@code 'big_chair'} and {@code 'big_chair'} has {@code looks_like}
-	 * {code 'chair'}, a throne will be displayed using the chair tile if tiles for {@code throne} and
-	 * {@code big_chair} do not exist. If a tileset can't find a tile for any item in the {@code looks_like}
-	 * chain, it will default to the ascii symbol.
+	 * The tileset loader will try to load the tile for that item if this item doesn't have a tile.
+	 * {@code looks_like} entries are implicitly chained, so if {@code 'throne'} has {@code looks_like}
+	 * {@code 'big_chair'} and {@code 'big_chair'} has {@code looks_like} {code 'chair'}, a throne will be
+	 * displayed using the chair tile if tiles for {@code throne} and {@code big_chair} do not exist.
+	 * If a tileset can't find a tile for any item in the {@code looks_like} chain, it will default
+	 * to the ascii symbol.
+	 *
+	 * @param objects {@code Set} of {@code CataJsonObject} instances to search when looking up id
+	 * declared in {@code looks_like} property. The search will be recursive looking through each
+	 * object until an object with a valid id that matches {@code looks_like} value is found.
+	 *
+	 * @return the object this object looks like or this object if no property was defined or
+	 * no object was matched with recursive search for inherited {@code looks_like} property value.
 	 */
-	public String looksLikeWhat() {
-		return looksLike != null ? looksLike : "";
+	public CataJsonObject looksLikeWhat(Set<CataJsonObject> objects) {
+
+		if (looksLike == null || looksLike.isEmpty() || objects.isEmpty()) {
+			return this;
+		}
+		for (CataJsonObject object : objects) {
+			List<String> objectIds = object.getIds();
+			if (!objectIds.isEmpty() && objectIds.get(0).equals(looksLike)) {
+				return object.looksLikeWhat(objects);
+			}
+		} // no parent look-a-like object found
+		return this;
 	}
 
 	/**

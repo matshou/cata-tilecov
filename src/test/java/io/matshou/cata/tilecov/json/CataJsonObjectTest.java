@@ -20,10 +20,7 @@ package io.matshou.cata.tilecov.json;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -89,8 +86,8 @@ public class CataJsonObjectTest {
 		Assertions.assertEquals(4, jsonObjects.size());
 
 		String[] expectedValues = {
-				"", "",
-				"", "f_floor_lamp_base",
+				"f_floor_lamp_base", "",
+				"f_floor_lamp", "f_floor_lamp_base",
 				"f_floor_lamp", "f_floor_lamp_base",
 				"f_floor_lamp", "f_floor_lamp_base"
 		};
@@ -99,7 +96,12 @@ public class CataJsonObjectTest {
 			CataJsonObject cataJsonObject = iter.next();
 
 			String expectedLooksLike = expectedValues[i];
-			Assertions.assertEquals(expectedLooksLike, cataJsonObject.looksLikeWhat());
+			CataJsonObject oLooksLike = cataJsonObject.looksLikeWhat(new HashSet<>(jsonObjects));
+			List<String> looksLikeIds = oLooksLike.getIds();
+			if (looksLikeIds.isEmpty()) {
+				Assertions.assertEquals(oLooksLike, cataJsonObject);
+			}
+			else Assertions.assertEquals(expectedLooksLike, oLooksLike.getIds().get(0));
 
 			String expectedCopyFrom = expectedValues[i + 1];
 			Assertions.assertEquals(expectedCopyFrom, cataJsonObject.copyFromWhat());
@@ -156,5 +158,55 @@ public class CataJsonObjectTest {
 			Assertions.assertTrue(cataJsonObject.getForegroundColor().isEmpty());
 			Assertions.assertTrue(cataJsonObject.getBackgroundColor().isEmpty());
 		}
+	}
+
+	@Test
+	void shouldInheritLooksLikeFromOtherObjectsWhenLooksLikeDefined() {
+
+		String[] jsonObjectText = new String[]{
+				"[",
+				"  {",
+				"    \"id\": \"one\",",
+				"    \"looks_like\": \"three\"",
+				"  },",
+				"  {",
+				"    \"id\": \"two\",",
+				"    \"looks_like\": \"one\"",
+				"  },",
+				"  {",
+				"    \"id\": \"three\"",
+				"  },",
+				"  {",
+				"    \"id\": \"four\",",
+				"    \"looks_like\": \"five\"",
+				"  }",
+				"]"
+		};
+		Optional<List<CataJsonObject>> oJsonObjects = JsonObjectBuilder.<CataJsonObject>create()
+				.ofType(CataJsonObject.class)
+				.withListTypeToken(new TypeToken<>() {})
+				.withDeserializer(CataJsonDeserializer.class)
+				.buildAsList(String.join("\n", jsonObjectText));
+
+		Assertions.assertTrue(oJsonObjects.isPresent());
+
+		List<CataJsonObject> jsonObjects = oJsonObjects.get();
+		Assertions.assertEquals(4, jsonObjects.size());
+
+		CataJsonObject one = jsonObjects.get(0);
+		CataJsonObject oneLooksLike = one.looksLikeWhat(new HashSet<>(jsonObjects));
+		Assertions.assertEquals("three", oneLooksLike.getIds().get(0));
+
+		CataJsonObject two = jsonObjects.get(1);
+		CataJsonObject twoLooksLike = two.looksLikeWhat(new HashSet<>(jsonObjects));
+		Assertions.assertEquals("three", twoLooksLike.getIds().get(0));
+
+		CataJsonObject three = jsonObjects.get(2);
+		CataJsonObject threeLooksLike = three.looksLikeWhat(new HashSet<>(jsonObjects));
+		Assertions.assertEquals("three", threeLooksLike.getIds().get(0));
+
+		CataJsonObject four = jsonObjects.get(3);
+		CataJsonObject fourLooksLike = four.looksLikeWhat(new HashSet<>(jsonObjects));
+		Assertions.assertEquals("four", fourLooksLike.getIds().get(0));
 	}
 }
