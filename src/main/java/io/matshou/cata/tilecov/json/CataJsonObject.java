@@ -168,4 +168,25 @@ public class CataJsonObject implements CataIdentifiable {
 	public String copyFromWhat() {
 		return copyFrom != null ? copyFrom : "";
 	}
+
+	@Override
+	public boolean equals(Object o) {
+
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		CataJsonObject that = (CataJsonObject) o;
+		if (!getType().equals(that.getType())) {
+			return false;
+		}
+		return getIds().equals(that.objectIds);
+	}
+
+	@Override
+	public int hashCode() {
+		return 31 * getType().hashCode() + getIds().hashCode();
+	}
 }
