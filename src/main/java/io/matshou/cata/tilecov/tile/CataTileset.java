@@ -80,7 +80,7 @@ public class CataTileset {
 	 * @param filters conditions under which tile id's should be filtered.
 	 * @return {@code Set} of all object ID's that will be mapped to one or more tiles in this tileset.
 	 */
-	public Set<String> getTileIds(CataIdentifiableFilter...filters) {
+	public Set<String> getTileIds(CataIdentifiableFilter... filters) {
 
 		Set<TilesJsonObject> filteredTiles = new HashSet<>();
 		for (TileAtlasJsonObject tileAtlas : tileConfig.getTileAtlases()) {

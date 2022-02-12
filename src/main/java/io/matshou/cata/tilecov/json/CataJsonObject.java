@@ -140,7 +140,6 @@ public class CataJsonObject implements CataIdentifiable {
 	 * @param objects {@code Set} of {@code CataJsonObject} instances to search when looking up id
 	 * declared in {@code looks_like} property. The search will be recursive looking through each
 	 * object until an object with a valid id that matches {@code looks_like} value is found.
-	 *
 	 * @return the object this object looks like or this object if no property was defined or
 	 * no object was matched with recursive search for inherited {@code looks_like} property value.
 	 */

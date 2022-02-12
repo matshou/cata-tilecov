@@ -14,8 +14,8 @@ import org.junit.jupiter.api.Test;
 import com.google.common.collect.ImmutableMap;
 
 import io.matshou.cata.tilecov.UnitTestResources;
-import io.matshou.cata.tilecov.json.CataJsonObject;
 import io.matshou.cata.tilecov.json.CataIdentifiableFilter;
+import io.matshou.cata.tilecov.json.CataJsonObject;
 
 public class CataJsonFileTreeTest extends UnitTestResources {
 

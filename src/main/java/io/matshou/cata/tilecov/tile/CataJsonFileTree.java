@@ -115,6 +115,7 @@ public class CataJsonFileTree {
 	 * Construct and populate a JSON file-tree for given directory path.
 	 *
 	 * @param path path to directory as starting point for mapping file tree.
+	 *
 	 * @throws IOException when an I/O exception occurs while walking files or building JSON object.
 	 * @throws FileNotFoundException when given path does not point to an existing file.
 	 * @throws IllegalArgumentException when given path does not represent a valid directory.
