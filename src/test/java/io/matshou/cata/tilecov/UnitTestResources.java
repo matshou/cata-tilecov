@@ -41,6 +41,7 @@ public abstract class UnitTestResources {
 	private static final String[] RESOURCE_FILE_PATHS = {
 			"data/json/furniture_and_terrain/furniture.json",
 			"data/json/items/fluff.json",
+			"data/json/items/guns.json",
 			"data/json/monsters/slugs.json",
 			"data/json/vehicles/vehicles.json",
 			"gfx/sample_tileset/tile_config.json",
@@ -49,6 +50,8 @@ public abstract class UnitTestResources {
 			"gfx/red_tileset/tileset.txt",
 			"gfx/blue_tileset/tile_config.json",
 			"gfx/blue_tileset/tileset.txt",
+			"gfx/purple_tileset/tile_config.json",
+			"gfx/purple_tileset/tileset.txt"
 	};
 	private Path tempDir;
 

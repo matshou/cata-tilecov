@@ -1,0 +1,6 @@
+#Purple Tileset
+
+NAME: purple_tileset
+VIEW: PurpleTileset
+JSON: tile_config.json
+TILESET: tiles.png

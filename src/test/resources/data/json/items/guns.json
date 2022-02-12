@@ -1,0 +1,29 @@
+[
+  {
+    "id": "90two",
+    "copy-from": "pistol_base",
+    "looks_like": "glock_19"
+  },
+  {
+    "id": "calico",
+    "type": "GUN"
+  },
+  {
+    "id": "cx4",
+    "looks_like": "ar15",
+    "type": "GUN"
+  },
+  {
+    "id": "glock_19",
+    "copy-from": "pistol_base",
+    "looks_like": "cx4"
+  },
+  {
+    "id": "ar15",
+    "type": "GUN"
+  },
+  {
+    "id": "sniper_rifle",
+    "type": "GUN"
+  }
+]
