@@ -14,9 +14,6 @@ plugins {
 // project spotless formatting rules
 apply from: 'spotless.gradle'
 
-// register local project properties
-apply from: 'setup.gradle'
-
 repositories {
     mavenCentral()
 }
@@ -46,7 +43,13 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.9'
 }
 
-if (project.ext.has('gameDir')) {
+Properties localProperties = new Properties()
+File propertiesFile = new File(projectDir, 'local.properties')
+if (propertiesFile.exists()) {
+    localProperties.load(new FileReader(propertiesFile))
+}
+String gameDir = localProperties.get('gameDir')
+if (gameDir != null) {
     // external files cannot be effectively searched by IDEA
     // so we need to copy these files inside the project root dir
     task updateJsonLibrary(type: Sync) {
