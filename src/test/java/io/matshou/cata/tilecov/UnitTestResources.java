@@ -52,7 +52,7 @@ public abstract class UnitTestResources {
 	};
 	private Path tempDir;
 
-	protected void copyResourcesToTempDir(File tempDir) throws IOException {
+	protected void setupUnitTest(File tempDir) throws IOException {
 
 		this.tempDir = tempDir.toPath();
 		for (String filePath : RESOURCE_FILE_PATHS) {
@@ -72,8 +72,8 @@ public abstract class UnitTestResources {
 	}
 
 	@BeforeEach
-	void copyResourcesToTempDir(@TempDir Path tempDir) throws IOException {
-		copyResourcesToTempDir(tempDir.toFile());
+	void setupUnitTest(@TempDir Path tempDir) throws IOException {
+		setupUnitTest(tempDir.toFile());
 	}
 
 	/**

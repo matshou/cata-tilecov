@@ -28,8 +28,8 @@ public class CataJsonFileTreeTest extends UnitTestResources {
 	private Path jsonDir;
 
 	@Override
-	protected void copyResourcesToTempDir(File tempDir) throws IOException {
-		super.copyResourcesToTempDir(tempDir);
+	protected void setupUnitTest(File tempDir) throws IOException {
+		super.setupUnitTest(tempDir);
 		jsonDir = getTempDir().resolve("data/json");
 	}
 
