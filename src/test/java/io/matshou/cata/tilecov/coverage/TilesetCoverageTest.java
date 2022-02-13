@@ -33,6 +33,8 @@ import io.matshou.cata.tilecov.json.CataJsonObject;
 import io.matshou.cata.tilecov.json.JsonObjectBuilder;
 import io.matshou.cata.tilecov.tile.CataTileset;
 
+import static io.matshou.cata.tilecov.coverage.TilesetCoverage.CoverageType;
+
 public class TilesetCoverageTest extends UnitTestResources {
 
 	private final Set<CataJsonObject> jsonItemObjects = new HashSet<>();
@@ -86,12 +88,12 @@ public class TilesetCoverageTest extends UnitTestResources {
 		TilesetCoverage coverage = TilesetCoverage.Builder.create(tilesetPath)
 				.withCataJsonObjects(jsonPath, jsonItemObjects).build();
 
-		Map<TilesetCoverage.Type, Set<String>> expectedCoverage = Map.of(
-				TilesetCoverage.Type.UNIQUE, Set.of("calico", "ar15", "cx4"),
-				TilesetCoverage.Type.INHERITED, Set.of("90two", "glock_19"),
-				TilesetCoverage.Type.NO_COVERAGE, Set.of("sniper_rifle")
+		Map<CoverageType, Set<String>> expectedCoverage = Map.of(
+				CoverageType.UNIQUE, Set.of("calico", "ar15", "cx4"),
+				CoverageType.INHERITED, Set.of("90two", "glock_19"),
+				CoverageType.NO_COVERAGE, Set.of("sniper_rifle")
 		);
-		for (Map.Entry<TilesetCoverage.Type, Set<String>> entry : expectedCoverage.entrySet()) {
+		for (Map.Entry<CoverageType, Set<String>> entry : expectedCoverage.entrySet()) {
 			Set<String> coverageForType = coverage.getCoverageOfType(entry.getKey(), jsonPath);
 			Assertions.assertFalse(coverageForType.retainAll(entry.getValue()));
 		}

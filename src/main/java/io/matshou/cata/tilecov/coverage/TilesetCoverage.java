@@ -41,7 +41,7 @@ public class TilesetCoverage {
 	/**
 	 * This class represents the type or quality of object tile coverage.
 	 */
-	public enum Type {
+	public enum CoverageType {
 
 		/**
 		 * This coverage quality indicates that an object uses a unique tile.
@@ -67,7 +67,7 @@ public class TilesetCoverage {
 	 * id entries mapped to coverage quality types. The path entries
 	 * represent JSON files the coverage data is derived from.
 	 */
-	final ImmutableMap<Path, ImmutableMap<String, Type>> data;
+	final ImmutableMap<Path, ImmutableMap<String, CoverageType>> data;
 	private final CataTileset tileset;
 
 	private TilesetCoverage(CataTileset tileset, Map<Path,
@@ -75,10 +75,10 @@ public class TilesetCoverage {
 
 		this.tileset = tileset;
 		Set<String> tileIds = tileset.getTileIds();
-		Map<Path, ImmutableMap<String, Type>> tempCoverageData = new HashMap<>();
+		Map<Path, ImmutableMap<String, CoverageType>> tempData = new HashMap<>();
 		for (Map.Entry<Path, Set<CataJsonObject>> entry : jsonObjectsMapped.entrySet()) {
 			Set<CataJsonObject> objects = entry.getValue();
-			Map<String, Type> fileCoverage = new HashMap<>();
+			Map<String, CoverageType> fileCoverage = new HashMap<>();
 			for (CataJsonObject object : objects) {
 				// the object has been excluded by filters
 				if (filters.stream().anyMatch(f -> f.match(object))) {
@@ -86,20 +86,20 @@ public class TilesetCoverage {
 				}
 				String objectId = object.getIds().get(0);
 				if (tileIds.contains(objectId)) {
-					fileCoverage.put(objectId, Type.UNIQUE);
+					fileCoverage.put(objectId, CoverageType.UNIQUE);
 					continue;
 				}
 				// copy object id from object that looks like the object
 				CataJsonObject looksLike = object.looksLikeWhat(objects);
 				if (!looksLike.equals(object)) {
-					fileCoverage.put(objectId, Type.INHERITED);
+					fileCoverage.put(objectId, CoverageType.INHERITED);
 					continue;
 				}
-				fileCoverage.put(objectId, Type.NO_COVERAGE);
+				fileCoverage.put(objectId, CoverageType.NO_COVERAGE);
 			}
-			tempCoverageData.put(entry.getKey(), ImmutableMap.copyOf(fileCoverage));
+			tempData.put(entry.getKey(), ImmutableMap.copyOf(fileCoverage));
 		}
-		data = ImmutableMap.copyOf(tempCoverageData);
+		data = ImmutableMap.copyOf(tempData);
 	}
 
 	/**
@@ -207,7 +207,7 @@ public class TilesetCoverage {
 	 */
 	public ImmutableSet<String> getCoverage(Path path) {
 
-		Map<String, Type> coverageEntry = data.get(path);
+		Map<String, CoverageType> coverageEntry = data.get(path);
 		return coverageEntry != null ? ImmutableSet.copyOf(coverageEntry.keySet()) : ImmutableSet.of();
 	}
 
@@ -220,10 +220,10 @@ public class TilesetCoverage {
 	 * @return all id's that can be found in this {@code TileCoverage} of given type
 	 * for given path or an empty list if no coverage was found for given path.
 	 */
-	public Set<String> getCoverageOfType(Type type, Path path) {
+	public Set<String> getCoverageOfType(CoverageType type, Path path) {
 
 		Set<String> result = new HashSet<>();
-		Map<String, Type> coverageMap = data.get(path);
+		Map<String, CoverageType> coverageMap = data.get(path);
 		if (coverageMap != null) {
 			coverageMap.entrySet().stream().filter(e ->
 					e.getValue() == type).forEach(e -> result.add(e.getKey()));
