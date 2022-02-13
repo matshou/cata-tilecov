@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.matshou.cata.tilecov.tile;
+package io.matshou.cata.tilecov.coverage;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -30,6 +30,7 @@ import com.google.common.collect.ImmutableSet;
 
 import io.matshou.cata.tilecov.json.CataIdentifiableFilter;
 import io.matshou.cata.tilecov.json.CataJsonObject;
+import io.matshou.cata.tilecov.tile.CataTileset;
 
 /**
  * This class contains data on {@link CataTileset} coverage.

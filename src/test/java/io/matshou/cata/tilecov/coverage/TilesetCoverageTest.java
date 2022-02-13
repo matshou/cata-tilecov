@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.matshou.cata.tilecov.tile;
+package io.matshou.cata.tilecov.coverage;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +31,7 @@ import io.matshou.cata.tilecov.UnitTestResources;
 import io.matshou.cata.tilecov.json.CataJsonDeserializer;
 import io.matshou.cata.tilecov.json.CataJsonObject;
 import io.matshou.cata.tilecov.json.JsonObjectBuilder;
+import io.matshou.cata.tilecov.tile.CataTileset;
 
 public class TilesetCoverageTest extends UnitTestResources {
 
