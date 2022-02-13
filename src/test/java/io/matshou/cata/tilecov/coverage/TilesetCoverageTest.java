@@ -36,18 +36,19 @@ import io.matshou.cata.tilecov.tile.CataTileset;
 public class TilesetCoverageTest extends UnitTestResources {
 
 	private final Set<CataJsonObject> jsonItemObjects = new HashSet<>();
-	private Path tilesetPath;
+	private Path jsonPath, tilesetPath;
 
 	@Override
 	protected void setupUnitTest(File tempDir) throws IOException {
 		super.setupUnitTest(tempDir);
 
 		tilesetPath = getTempDir().resolve("gfx/purple_tileset");
+		jsonPath = getTempDir().resolve("data/json/items/guns.json");
 		Optional<List<CataJsonObject>> oJsonObjects = JsonObjectBuilder.<CataJsonObject>create()
 				.ofType(CataJsonObject.class)
 				.withListTypeToken(new TypeToken<>() {})
 				.withDeserializer(CataJsonDeserializer.class)
-				.buildAsList(getTempDir().resolve("data/json/items/guns.json"));
+				.buildAsList(jsonPath);
 
 		Assertions.assertTrue(oJsonObjects.isPresent());
 		jsonItemObjects.addAll(oJsonObjects.get());
@@ -57,12 +58,12 @@ public class TilesetCoverageTest extends UnitTestResources {
 	void shouldBuildTilesetCoverageFromPath() throws IOException {
 
 		TilesetCoverage coverage = TilesetCoverage.Builder.create(tilesetPath)
-				.withCataJsonObjects(jsonItemObjects).build();
+				.withCataJsonObjects(jsonPath, jsonItemObjects).build();
 
 		Set<String> expectedCoverage = Set.of(
 				"90two", "cx4", "calico", "ar15", "sniper_rifle"
 		);
-		Set<String> actualCoverage = coverage.getCoverage();
+		Set<String> actualCoverage = coverage.getCoverage(jsonPath);
 		Assertions.assertFalse(new HashSet<>(expectedCoverage).retainAll(actualCoverage));
 	}
 
@@ -70,12 +71,12 @@ public class TilesetCoverageTest extends UnitTestResources {
 	void shouldBuildTilesetCoverageFromTilesetInstance() throws IOException {
 
 		TilesetCoverage coverage = TilesetCoverage.Builder.create(new CataTileset(tilesetPath))
-				.withCataJsonObjects(jsonItemObjects).build();
+				.withCataJsonObjects(jsonPath, jsonItemObjects).build();
 
 		Set<String> expectedCoverage = Set.of(
 				"90two", "cx4", "calico", "ar15", "sniper_rifle"
 		);
-		Set<String> actualCoverage = coverage.getCoverage();
+		Set<String> actualCoverage = coverage.getCoverage(jsonPath);
 		Assertions.assertFalse(new HashSet<>(expectedCoverage).retainAll(actualCoverage));
 	}
 
@@ -83,7 +84,7 @@ public class TilesetCoverageTest extends UnitTestResources {
 	void shouldGenerateAccurateTileCoverage() throws IOException {
 
 		TilesetCoverage coverage = TilesetCoverage.Builder.create(tilesetPath)
-				.withCataJsonObjects(jsonItemObjects).build();
+				.withCataJsonObjects(jsonPath, jsonItemObjects).build();
 
 		Map<TilesetCoverage.Type, Set<String>> expectedCoverage = Map.of(
 				TilesetCoverage.Type.UNIQUE, Set.of("calico", "ar15", "cx4"),
@@ -91,7 +92,7 @@ public class TilesetCoverageTest extends UnitTestResources {
 				TilesetCoverage.Type.NO_COVERAGE, Set.of("sniper_rifle")
 		);
 		for (Map.Entry<TilesetCoverage.Type, Set<String>> entry : expectedCoverage.entrySet()) {
-			Set<String> coverageForType = coverage.getCoverageOfType(entry.getKey());
+			Set<String> coverageForType = coverage.getCoverageOfType(entry.getKey(), jsonPath);
 			Assertions.assertFalse(coverageForType.retainAll(entry.getValue()));
 		}
 	}

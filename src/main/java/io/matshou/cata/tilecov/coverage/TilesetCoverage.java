@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.jetbrains.annotations.Contract;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 import io.matshou.cata.tilecov.json.CataIdentifiableFilter;
@@ -61,29 +62,44 @@ public class TilesetCoverage {
 		NO_COVERAGE
 	}
 
-	private final Map<String, Type> coverageData = new HashMap<>();
+	/**
+	 * This map has {@code Path} keys mapped to coverage data containing
+	 * id entries mapped to coverage quality types. The path entries
+	 * represent JSON files the coverage data is derived from.
+	 */
+	final ImmutableMap<Path, ImmutableMap<String, Type>> data;
+	private final CataTileset tileset;
 
-	private TilesetCoverage(CataTileset tileset, Set<CataJsonObject> objects, Set<CataIdentifiableFilter> filters) {
+	private TilesetCoverage(CataTileset tileset, Map<Path,
+			Set<CataJsonObject>> jsonObjectsMapped, Set<CataIdentifiableFilter> filters) {
 
+		this.tileset = tileset;
 		Set<String> tileIds = tileset.getTileIds();
-		for (CataJsonObject object : objects) {
-			// the object has been excluded by filters
-			if (filters.stream().anyMatch(f -> f.match(object))) {
-				continue;
+		Map<Path, ImmutableMap<String, Type>> tempCoverageData = new HashMap<>();
+		for (Map.Entry<Path, Set<CataJsonObject>> entry : jsonObjectsMapped.entrySet()) {
+			Set<CataJsonObject> objects = entry.getValue();
+			Map<String, Type> fileCoverage = new HashMap<>();
+			for (CataJsonObject object : objects) {
+				// the object has been excluded by filters
+				if (filters.stream().anyMatch(f -> f.match(object))) {
+					continue;
+				}
+				String objectId = object.getIds().get(0);
+				if (tileIds.contains(objectId)) {
+					fileCoverage.put(objectId, Type.UNIQUE);
+					continue;
+				}
+				// copy object id from object that looks like the object
+				CataJsonObject looksLike = object.looksLikeWhat(objects);
+				if (!looksLike.equals(object)) {
+					fileCoverage.put(objectId, Type.INHERITED);
+					continue;
+				}
+				fileCoverage.put(objectId, Type.NO_COVERAGE);
 			}
-			String objectId = object.getIds().get(0);
-			if (tileIds.contains(objectId)) {
-				coverageData.put(objectId, Type.UNIQUE);
-				continue;
-			}
-			// copy object id from object that looks like the object
-			CataJsonObject looksLike = object.looksLikeWhat(objects);
-			if (!looksLike.equals(object)) {
-				coverageData.put(objectId, Type.INHERITED);
-				continue;
-			}
-			coverageData.put(objectId, Type.NO_COVERAGE);
+			tempCoverageData.put(entry.getKey(), ImmutableMap.copyOf(fileCoverage));
 		}
+		data = ImmutableMap.copyOf(tempCoverageData);
 	}
 
 	/**
@@ -96,7 +112,7 @@ public class TilesetCoverage {
 
 		private final CataTileset tileset;
 		private final Set<CataIdentifiableFilter> idFilters = new HashSet<>();
-		private Set<CataJsonObject> cataJsonObjects = new HashSet<>();
+		private final Map<Path, Set<CataJsonObject>> cataJsonObjects = new HashMap<>();
 
 		private Builder(CataTileset tileset) {
 			this.tileset = tileset;
@@ -132,14 +148,16 @@ public class TilesetCoverage {
 		}
 
 		/**
-		 * Configure the builder to create {@code TilesetCoverage} with given objects.
+		 * Configure the builder to create {@code TilesetCoverage}
+		 * with specified JSON objects that were parsed from given file path.
 		 *
+		 * @param path {@code Path} the specified objects should be mapped to.
 		 * @param objects {@code Set} of objects to use to construct {@code TileCoverage}.
 		 * @return instance of this builder.
 		 */
-		@Contract("_ -> this")
-		public Builder withCataJsonObjects(Set<CataJsonObject> objects) {
-			this.cataJsonObjects = objects;
+		@Contract("_, _ -> this")
+		public Builder withCataJsonObjects(Path path, Set<CataJsonObject> objects) {
+			cataJsonObjects.put(path, objects);
 			return this;
 		}
 
@@ -156,13 +174,11 @@ public class TilesetCoverage {
 			if (emptyIds) {
 				idFilters.add(CataIdentifiableFilter.NO_EMPTY_ID);
 			}
-			else
-				idFilters.remove(CataIdentifiableFilter.NO_EMPTY_ID);
+			else idFilters.remove(CataIdentifiableFilter.NO_EMPTY_ID);
 			if (overlays) {
 				idFilters.add(CataIdentifiableFilter.NO_OVERLAYS);
 			}
-			else
-				idFilters.remove(CataIdentifiableFilter.NO_OVERLAYS);
+			else idFilters.remove(CataIdentifiableFilter.NO_OVERLAYS);
 			return this;
 		}
 
@@ -176,21 +192,42 @@ public class TilesetCoverage {
 	}
 
 	/**
-	 * @return all id's that can be found in this {@code TileCoverage}.
+	 * @return {@code CataTileset} associated with this coverage.
 	 */
-	public ImmutableSet<String> getCoverage() {
-		return ImmutableSet.copyOf(coverageData.keySet());
+	public CataTileset getTileset() {
+		return tileset;
 	}
 
 	/**
-	 * @param type type of coverage to get.
-	 * @return {@code Set} of id's that can be found in this {@code TileCoverage} of given type.
+	 * Get immutable {@code Set} of id's that can be found for given path.
+	 *
+	 * @param path path to get the coverage data for.
+	 * @return all id's that can be found in this {@code TileCoverage} for given path
+	 * or an empty list if no coverage was found for given path.
 	 */
-	public Set<String> getCoverageOfType(Type type) {
+	public ImmutableSet<String> getCoverage(Path path) {
+
+		Map<String, Type> coverageEntry = data.get(path);
+		return coverageEntry != null ? ImmutableSet.copyOf(coverageEntry.keySet()) : ImmutableSet.of();
+	}
+
+	/**
+	 * Get immutable {@code Set} of id's that are covered with given
+	 * quality coverage that can be found for specified path.
+	 *
+	 * @param type coverage type to use as filter.
+	 * @param path path to get the coverage of type data for.
+	 * @return all id's that can be found in this {@code TileCoverage} of given type
+	 * for given path or an empty list if no coverage was found for given path.
+	 */
+	public Set<String> getCoverageOfType(Type type, Path path) {
 
 		Set<String> result = new HashSet<>();
-		coverageData.entrySet().stream().filter(e ->
-				e.getValue() == type).forEach(e -> result.add(e.getKey()));
+		Map<String, Type> coverageMap = data.get(path);
+		if (coverageMap != null) {
+			coverageMap.entrySet().stream().filter(e ->
+					e.getValue() == type).forEach(e -> result.add(e.getKey()));
+		}
 		return result;
 	}
 }
