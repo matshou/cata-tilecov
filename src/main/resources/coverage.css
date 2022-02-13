@@ -1,0 +1,93 @@
+:root {
+    --grey: #DBDBDC;
+    --light-blue: #F9FAFB;
+    --blue: rgba(0, 113, 255, 0.1);
+    --green: rgba(0, 255, 0, 0.1);
+    --yellow: rgba(255, 251, 0, 0.1);
+    --red: rgba(255, 51, 0, 0.1);
+}
+
+body {
+    font-family: "Lato", Arial, sans-serif;
+    margin: 30px 25px 0 25px;
+    font-size: 14px;
+}
+
+hr {
+    border: 1px solid var(--grey);
+}
+
+.flex-table {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--grey);
+}
+
+.flex-row {
+    display: inherit;
+}
+
+.flex-column {
+    background-color: var(--light-blue);
+    font-weight: 700;
+}
+
+.flex-row > div {
+    display: inherit;
+    border: 1px solid var(--grey);
+    padding: 20px 0 20px 0;
+}
+
+.flex-row .indented-text {
+    padding-left: 15px;
+}
+
+.flex-row div:nth-child(1) {
+    flex: 0 0 50%;
+}
+
+.flex-row div:nth-child(n+2):nth-child(-n+4) {
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 8%;
+    padding: 0;
+}
+
+.flex-row div:nth-child(5) {
+    text-align: right;
+    flex-grow: 2;
+}
+
+.flex-row div:nth-child(5) .indented-text {
+    padding-left: 15px;
+}
+
+.flex-row .flex-column:nth-child(5) {
+    justify-content: flex-start;
+    padding: 20px 0 20px 0;
+}
+
+.flex-row div:nth-child(5) {
+    position: relative;
+    padding: 0;
+}
+
+div[color=blue] {
+    background-color: var(--blue);
+}
+div[color=green] {
+    background-color: var(--green);
+}
+div[color=yellow] {
+    background-color: var(--yellow);
+}
+div[color=red] {
+    background-color: var(--red);
+}
+
+.flex-row .coverage-text {
+    position: absolute;
+    margin-right: 15px;
+    top: 35%;
+    right:0;
+}
