@@ -63,19 +63,81 @@ public class TilesetCoverage {
 	}
 
 	/**
+	 * This class provides tileset coverage statistics or information on
+	 * how many JSON objects were covered with what coverage qualities.
+	 */
+	public static class CoverageStats {
+
+		private final int total;
+		private final int[] type = new int[CoverageType.values().length];
+
+		private CoverageStats(Map<String, CoverageType> coverageData) {
+
+			total = coverageData.size();
+			for (CoverageType value : CoverageType.values()) {
+				type[value.ordinal()] = (int) coverageData.entrySet().stream()
+						.filter(e -> e.getValue() == value).count();
+			}
+		}
+
+		/**
+		 * @return total amount of objects that were considered in tile coverage.
+		 */
+		public int getObjectsTotal() {
+			return total;
+		}
+
+		/**
+		 * @return total amount of objects that are covered by a unique tile.
+		 * @see CoverageType#UNIQUE
+		 */
+		public int getUniqueCoverageTotal() {
+			return type[CoverageType.UNIQUE.ordinal()];
+		}
+
+		/**
+		 * @return total amount of objects that are inheriting their appearance from another object.
+		 * @see CoverageType#INHERITED
+		 */
+		public int getInheritedTotal() {
+			return type[CoverageType.INHERITED.ordinal()];
+		}
+
+		/**
+		 * @return total amount of objects that are not covered by any tile.
+		 * @see CoverageType#NO_COVERAGE
+		 */
+		public int getNoCoverageTotal() {
+			return type[CoverageType.NO_COVERAGE.ordinal()];
+		}
+	}
+
+	/**
 	 * This map has {@code Path} keys mapped to coverage data containing
 	 * id entries mapped to coverage quality types. The path entries
 	 * represent JSON files the coverage data is derived from.
 	 */
 	final ImmutableMap<Path, ImmutableMap<String, CoverageType>> data;
+
+	/**
+	 * Tileset associated with this tileset coverage.
+	 */
 	private final CataTileset tileset;
+
+	/**
+	 * This map has {@code Path} keys mapped to coverage statistics.
+	 */
+	final ImmutableMap<Path, CoverageStats> stats;
 
 	private TilesetCoverage(CataTileset tileset, Map<Path,
 			Set<CataJsonObject>> jsonObjectsMapped, Set<CataIdentifiableFilter> filters) {
 
 		this.tileset = tileset;
 		Set<String> tileIds = tileset.getTileIds();
+
 		Map<Path, ImmutableMap<String, CoverageType>> tempData = new HashMap<>();
+		Map<Path, CoverageStats> tempStats = new HashMap<>();
+
 		for (Map.Entry<Path, Set<CataJsonObject>> entry : jsonObjectsMapped.entrySet()) {
 			Set<CataJsonObject> objects = entry.getValue();
 			Map<String, CoverageType> fileCoverage = new HashMap<>();
@@ -98,8 +160,10 @@ public class TilesetCoverage {
 				fileCoverage.put(objectId, CoverageType.NO_COVERAGE);
 			}
 			tempData.put(entry.getKey(), ImmutableMap.copyOf(fileCoverage));
+			tempStats.put(entry.getKey(), new CoverageStats(fileCoverage));
 		}
 		data = ImmutableMap.copyOf(tempData);
+		stats = ImmutableMap.copyOf(tempStats);
 	}
 
 	/**

@@ -83,7 +83,7 @@ public class TilesetCoverageTest extends UnitTestResources {
 	}
 
 	@Test
-	void shouldGenerateAccurateTileCoverage() throws IOException {
+	void shouldGenerateAccurateTilesetCoverage() throws IOException {
 
 		TilesetCoverage coverage = TilesetCoverage.Builder.create(tilesetPath)
 				.withCataJsonObjects(jsonPath, jsonItemObjects).build();
@@ -97,5 +97,20 @@ public class TilesetCoverageTest extends UnitTestResources {
 			Set<String> coverageForType = coverage.getCoverageOfType(entry.getKey(), jsonPath);
 			Assertions.assertFalse(coverageForType.retainAll(entry.getValue()));
 		}
+	}
+
+	@Test
+	void shouldGenerateAccurateTilesetCoverageStats() throws IOException {
+
+		TilesetCoverage coverage = TilesetCoverage.Builder.create(tilesetPath)
+				.withCataJsonObjects(jsonPath, jsonItemObjects).build();
+
+		TilesetCoverage.CoverageStats coverageStats = coverage.stats.get(jsonPath);
+		Assertions.assertNotNull(coverageStats);
+
+		Assertions.assertEquals(6, coverageStats.getObjectsTotal());
+		Assertions.assertEquals(3, coverageStats.getUniqueCoverageTotal());
+		Assertions.assertEquals(2, coverageStats.getInheritedTotal());
+		Assertions.assertEquals(1, coverageStats.getNoCoverageTotal());
 	}
 }
