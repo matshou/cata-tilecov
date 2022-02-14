@@ -126,6 +126,7 @@ public class TilesetCoverageReport {
 	 * dependency files will be included in the output directory.
 	 *
 	 * @param outputDir path to directory where to write the file.
+	 *
 	 * @throws IOException when an I/O error occurred while reading or writing from stream.
 	 * @throws FileNotFoundException when unable to find {@code coverage.css} file in jar or output directory.
 	 */
@@ -152,6 +153,7 @@ public class TilesetCoverageReport {
 	 *
 	 * @param filePath path to file to copy.
 	 * @param outputDir path to directory to copy the file to.
+	 *
 	 * @throws IOException when an I/O exception occurred while copying file.
 	 */
 	private void copyFileFromJar(String filePath, Path outputDir) throws IOException {

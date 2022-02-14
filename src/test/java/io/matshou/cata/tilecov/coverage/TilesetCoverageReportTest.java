@@ -46,7 +46,7 @@ public class TilesetCoverageReportTest extends UnitTestResources {
 		super.setupUnitTest(tempDir);
 
 		Path tilesetPath = getTempDir().resolve("gfx/diamond_tileset");
-		Path[] jsonPaths = new Path[] {
+		Path[] jsonPaths = new Path[]{
 				Paths.get("data/json/monsters/slugs.json"),
 				Paths.get("data/json/items/fluff.json"),
 				Paths.get("data/json/furniture_and_terrain/furniture.json")
