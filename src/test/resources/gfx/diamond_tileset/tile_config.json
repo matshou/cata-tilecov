@@ -1,0 +1,59 @@
+{
+  "tile_info": [
+    {
+      "height": 16,
+      "width": 16,
+      "iso": true,
+      "pixelscale": 1
+    }
+  ],
+  "tiles-new": [
+    {
+      "file": "tiles.png",
+      "tiles": [
+        {
+          "id": "calico",
+          "fg": 0,
+          "bg": 0,
+          "rotates": true
+        },
+        {
+          "id": "cx4",
+          "fg": 0,
+          "bg": 0,
+          "rotates": false
+        },
+        {
+          "id": "ar15",
+          "fg": 0,
+          "bg": 0,
+          "rotates": true
+        },
+        {
+          "id": "magic_8_ball",
+          "fg": 0,
+          "bg": 0,
+          "rotates": true
+        },
+        {
+          "id": "deck_of_cards",
+          "fg": 0,
+          "bg": 0,
+          "rotates": true
+        },
+        {
+          "id": "coin_quarter",
+          "fg": 0,
+          "bg": 0,
+          "rotates": true
+        },
+        {
+          "id": "mon_sludge_crawler",
+          "fg": 0,
+          "bg": 0,
+          "rotates": true
+        }
+      ]
+    }
+  ]
+}

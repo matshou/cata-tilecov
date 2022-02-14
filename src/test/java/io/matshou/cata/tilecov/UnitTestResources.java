@@ -51,7 +51,9 @@ public abstract class UnitTestResources {
 			"gfx/blue_tileset/tile_config.json",
 			"gfx/blue_tileset/tileset.txt",
 			"gfx/purple_tileset/tile_config.json",
-			"gfx/purple_tileset/tileset.txt"
+			"gfx/purple_tileset/tileset.txt",
+			"gfx/diamond_tileset/tile_config.json",
+			"gfx/diamond_tileset/tileset.txt"
 	};
 	private Path tempDir;
 

@@ -1,0 +1,6 @@
+#Diamond Tileset
+
+NAME: diamond_tileset
+VIEW: DiamondTileset
+JSON: tile_config.json
+TILESET: tiles.png
