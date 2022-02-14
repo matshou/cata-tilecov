@@ -180,10 +180,11 @@ public class TilesetCoverage {
 
 		private Builder(CataTileset tileset) {
 			this.tileset = tileset;
+			idFilters.add(CataIdentifiableFilter.NO_EMPTY_ID);
 		}
 
 		private Builder(Path tilesetDir) throws IOException {
-			this.tileset = new CataTileset(tilesetDir);
+			this(new CataTileset(tilesetDir));
 		}
 
 		/**
@@ -228,21 +229,12 @@ public class TilesetCoverage {
 		/**
 		 * Configure the builder to exclude certain id's from coverage.
 		 *
-		 * @param emptyIds whether to exclude id's that are empty strings.
-		 * @param overlays whether to exclude id's that represent overlays.
 		 * @return instance of this builder.
 		 */
-		@Contract("_, _ -> this")
-		public Builder exclude(boolean emptyIds, boolean overlays) {
+		@Contract("-> this")
+		public Builder excludeOverlays() {
 
-			if (emptyIds) {
-				idFilters.add(CataIdentifiableFilter.NO_EMPTY_ID);
-			}
-			else idFilters.remove(CataIdentifiableFilter.NO_EMPTY_ID);
-			if (overlays) {
-				idFilters.add(CataIdentifiableFilter.NO_OVERLAYS);
-			}
-			else idFilters.remove(CataIdentifiableFilter.NO_OVERLAYS);
+			idFilters.add(CataIdentifiableFilter.NO_OVERLAYS);
 			return this;
 		}
 
