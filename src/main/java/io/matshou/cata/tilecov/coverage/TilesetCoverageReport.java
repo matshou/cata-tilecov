@@ -99,9 +99,9 @@ public class TilesetCoverageReport {
 			// report table columns
 			Element tableColumns = FLEX_ROW.appendChildren(List.of(
 					cloneElement(FLEX_COLUMN, INDENTED_TEXT.shallowClone().text("Files")),
-					FLEX_COLUMN.shallowClone().text("X"),
-					FLEX_COLUMN.shallowClone().text("Y"),
-					FLEX_COLUMN.shallowClone().text("Z"),
+					cloneElement(FLEX_COLUMN, imageElement("assets/total.png", "total", 25)),
+					cloneElement(FLEX_COLUMN, imageElement("assets/eye.png", "looks-like", 25)),
+					cloneElement(FLEX_COLUMN, imageElement("assets/x.png", "no-coverage", 25)),
 					cloneElement(FLEX_COLUMN, INDENTED_TEXT.shallowClone().text("Coverage"))
 			));
 			table.appendChild(tableColumns);
@@ -131,23 +131,49 @@ public class TilesetCoverageReport {
 	 */
 	public void writeToFile(Path outputDir) throws IOException {
 
-		InputStream stream = TilesetCoverageReport.class.getResourceAsStream("/coverage.css");
-		if (stream == null) {
-			throw new FileNotFoundException("Unable to find 'coverage.css' file in jar");
-		}
-		byte[] buffer = new byte[stream.available()];
-		stream.read(buffer);
+		// coverage CSS file
+		copyFileFromJar("coverage.css", outputDir);
 
-		// copy coverage CSS to output directory
-		File targetFile = outputDir.resolve("coverage.css").toFile();
-		Files.write(buffer, targetFile);
-		if (!targetFile.exists()) {
-			throw new FileNotFoundException("Unable to find 'coverage.css' file in output dir: " + outputDir);
+		// copy all HTML asset files
+		String[] assetFilePaths = { "eye.png", "total.png", "x.png" };
+		for (String assetFilePath : assetFilePaths) {
+			copyFileFromJar("assets/" + assetFilePath, outputDir);
 		}
 		// write coverage report HTML to file
 		File coverageReportFile = outputDir.resolve("coverage.html").toFile();
 		CharSink charSink = Files.asCharSink(coverageReportFile, Charset.defaultCharset());
 		charSink.write(htmlDocument.outerHtml());
+	}
+
+	/**
+	 * Copy file from application jar to specified output directory.
+	 * <p>
+	 * Note that the file must be a regular file and <b>not</b> a directory.
+	 *
+	 * @param filePath path to file to copy.
+	 * @param outputDir path to directory to copy the file to.
+	 * @throws IOException when an I/O exception occurred while copying file.
+	 */
+	private void copyFileFromJar(String filePath, Path outputDir) throws IOException {
+
+		InputStream stream = TilesetCoverageReport.class.getResourceAsStream('/' + filePath);
+		if (stream == null) {
+			String msg = "Unable to find '%s' file in jar";
+			throw new FileNotFoundException(String.format(msg, filePath));
+		}
+		byte[] buffer = new byte[stream.available()];
+		stream.read(buffer);
+
+		File targetFile = outputDir.resolve(filePath).toFile();
+		File targetParentFile = targetFile.getParentFile();
+		if (!targetParentFile.exists() && !targetParentFile.mkdirs()) {
+			throw new IOException("Unable to create directory structure for path: " + targetFile.getPath());
+		}
+		Files.write(buffer, targetFile);
+		if (!targetFile.exists()) {
+			String msg = "Unable to find '%s' file in output dir: %s";
+			throw new FileNotFoundException(String.format(msg, filePath, outputDir));
+		}
 	}
 
 	private static Element divWithAttributes(Map<String, String> attributesMap) {
@@ -163,7 +189,20 @@ public class TilesetCoverageReport {
 
 		Attributes attributes = new Attributes();
 		attributes.add("href", link);
+
 		return new Element(Tag.valueOf("a"), null, attributes).text(name);
+	}
+
+	private static Element imageElement(String src, String alt, int size) {
+
+		Attributes attributes = new Attributes();
+		attributes.add("src", src);
+		attributes.add("alt", alt);
+		if (size > 0) {
+			attributes.add("width", String.valueOf(size));
+			attributes.add("height", String.valueOf(size));
+		}
+		return new Element(Tag.valueOf("img"), null, attributes);
 	}
 
 	private static Element cloneElement(Element element, Element appendChild) {
