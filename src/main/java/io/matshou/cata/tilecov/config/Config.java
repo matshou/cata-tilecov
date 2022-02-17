@@ -48,7 +48,7 @@ public class Config {
 	// map of configuration properties
 	static ImmutableMap<String, Object> properties;
 
-	enum Entry {
+	public enum Entry {
 
 		/**
 		 * Path to Cataclysm game directory.
@@ -83,7 +83,7 @@ public class Config {
 			return outputDir.toFile();
 		}, "Path to coverage report output directory", false);
 
-		final String name;
+		public final String name;
 		final String defaultValue;
 		final String comment;
 		final boolean optional;
