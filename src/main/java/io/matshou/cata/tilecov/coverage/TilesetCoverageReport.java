@@ -192,6 +192,7 @@ public class TilesetCoverageReport {
 
 		Attributes attributes = new Attributes();
 		attributes.add("href", link);
+		attributes.add("target", "blank");
 
 		return new Element(Tag.valueOf("a"), null, attributes).text(name);
 	}
