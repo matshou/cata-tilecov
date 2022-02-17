@@ -18,6 +18,7 @@
 package io.matshou.cata.tilecov;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -103,7 +104,10 @@ public class Main {
 	 * @param args array of application arguments.
 	 * @see Main.Argument
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+
+		// initialize configuration file
+		Config.initialize();
 
 		// parse and validate app arguments
 		handleAppArgs(args);
