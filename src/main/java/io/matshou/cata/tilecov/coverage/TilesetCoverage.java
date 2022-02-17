@@ -19,15 +19,13 @@ package io.matshou.cata.tilecov.coverage;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.jetbrains.annotations.Contract;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSortedMap;
 
 import io.matshou.cata.tilecov.json.CataIdentifiableFilter;
 import io.matshou.cata.tilecov.json.CataJsonObject;
@@ -117,7 +115,7 @@ public class TilesetCoverage {
 	 * id entries mapped to coverage quality types. The path entries
 	 * represent JSON files the coverage data is derived from.
 	 */
-	final ImmutableMap<Path, ImmutableMap<String, CoverageType>> data;
+	final ImmutableSortedMap<Path, ImmutableMap<String, CoverageType>> data;
 
 	/**
 	 * Tileset associated with this tileset coverage.
@@ -129,7 +127,7 @@ public class TilesetCoverage {
 	 */
 	final ImmutableMap<Path, CoverageStats> stats;
 
-	private TilesetCoverage(CataTileset tileset, Map<Path,
+	private TilesetCoverage(CataTileset tileset, TreeMap<Path,
 			Set<CataJsonObject>> jsonObjectsMapped, Set<CataIdentifiableFilter> filters) {
 
 		this.tileset = tileset;
@@ -162,7 +160,7 @@ public class TilesetCoverage {
 			tempData.put(entry.getKey(), ImmutableMap.copyOf(fileCoverage));
 			tempStats.put(entry.getKey(), new CoverageStats(fileCoverage));
 		}
-		data = ImmutableMap.copyOf(tempData);
+		data = ImmutableSortedMap.copyOf(tempData);
 		stats = ImmutableMap.copyOf(tempStats);
 	}
 
@@ -176,7 +174,7 @@ public class TilesetCoverage {
 
 		private final CataTileset tileset;
 		private final Set<CataIdentifiableFilter> idFilters = new HashSet<>();
-		private final Map<Path, Set<CataJsonObject>> cataJsonObjects = new HashMap<>();
+		private final TreeMap<Path, Set<CataJsonObject>> cataJsonObjects = new TreeMap<>();
 
 		private Builder(CataTileset tileset) {
 			this.tileset = tileset;
