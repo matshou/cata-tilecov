@@ -52,6 +52,21 @@ public class Main {
 					throw new IllegalArgumentException("Game directory is not a valid directory: " + value);
 				}
 			}
+		},
+		OUTPUT_DIR("outputDir", "OUTPUT_DIR", true) {
+			@Override
+			Object getAsObject(String value) {
+				return Paths.get(!value.isEmpty() ? value : "reports");
+			}
+
+			@Override
+			void validate(String value) {
+				// output directory path has to NOT point to an existing file
+				Path outputDir = ((Path) getAsObject(value));
+				if (java.nio.file.Files.isRegularFile(outputDir)) {
+					throw new IllegalArgumentException("Output directory needs to be a directory: " + value);
+				}
+			}
 		};
 		final String appArgName, sysPropName;
 		private final boolean optional;

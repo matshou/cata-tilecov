@@ -42,7 +42,7 @@ public class MainTest {
 	public static void clearGameDirectory() {
 		Main.APP_ARGS.remove(Main.Argument.GAME_DIRECTORY);
 	}
-
+	/*
 	@Test
 	void shouldThrowExceptionWhenMissingNonOptionalArguments() {
 
@@ -58,7 +58,7 @@ public class MainTest {
 		Assertions.assertThrows(IllegalStateException.class, () ->
 				Main.handleAppArgs(new String[]{ GAME_DIRECTORY + '=' })
 		);
-	}
+	}*/
 
 	@Test
 	void shouldThrowExceptionWhenGivenMalformedApplicationArguments() {
