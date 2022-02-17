@@ -18,14 +18,21 @@
 package io.matshou.cata.tilecov;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableSet;
+
+import io.matshou.cata.tilecov.config.Config;
+import io.matshou.cata.tilecov.coverage.TilesetCoverage;
+import io.matshou.cata.tilecov.coverage.TilesetCoverageReport;
+import io.matshou.cata.tilecov.json.CataJsonObject;
+import io.matshou.cata.tilecov.tile.CataJsonFileTree;
 
 public class Main {
 
@@ -111,6 +118,38 @@ public class Main {
 
 		// parse and validate app arguments
 		handleAppArgs(args);
+
+		Path gameDir = getGameDirectory();
+		Path gameJsonDir = gameDir.resolve("data/json");
+		if (!gameJsonDir.toFile().exists()) {
+			throw new FileNotFoundException("Unable to find 'data/json' in game root directory: " + gameDir);
+		}
+		Path gfxDir = gameDir.resolve("gfx");
+		if (!gfxDir.toFile().exists()) {
+			throw new FileNotFoundException("Unable to find 'gfx' directory in: " + gameDir);
+		}
+		String[] jsonDirectories = new String[]{
+				"items", "monsters"
+		};
+		Set<CataJsonFileTree> cataJsonFileTrees = new HashSet<>();
+		for (String sJsonDir : jsonDirectories) {
+			Path jsonDir = Paths.get(sJsonDir);
+			cataJsonFileTrees.add(new CataJsonFileTree(gameJsonDir, jsonDir));
+		}
+		Set<TilesetCoverage> tilesetCoverages = new HashSet<>();
+		for (Path path : Files.find(gfxDir, 1, (p, bfa) ->
+				p != gfxDir && bfa.isDirectory()).collect(java.util.stream.Collectors.toSet())) {
+
+			TilesetCoverage.Builder builder = TilesetCoverage.Builder.create(path).excludeOverlays();
+			for (CataJsonFileTree fileTree : cataJsonFileTrees) {
+				for (Map.Entry<Path, ImmutableSet<CataJsonObject>> entry : fileTree.entrySet()) {
+					builder.withCataJsonObjects(gameJsonDir.resolve(entry.getKey()), entry.getValue());
+				}
+			}
+			tilesetCoverages.add(builder.build());
+		}
+		TilesetCoverageReport coverageReport = new TilesetCoverageReport(tilesetCoverages);
+		coverageReport.writeToFile(((File) APP_ARGS.get(Argument.OUTPUT_DIR)).toPath());
 	}
 
 	/**
