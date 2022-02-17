@@ -151,12 +151,16 @@ public class Main {
 			if (!appArgValue.isEmpty()) {
 				// validate argument values before storing them to map
 				property.validate(appArgValue);
+				// store argument value as object in map
+				APP_ARGS.put(property, property.getAsObject(appArgValue));
+				continue;
 			}
 			else if (!property.optional) {
 				String msg = "Missing non-optional application argument: %s(%s)";
 				throw new IllegalStateException(String.format(msg, property.appArgName, property.sysPropName));
 			}
-			APP_ARGS.put(property, property.getAsObject(appArgValue));
+			Config.Entry configEntry = Config.Entry.values()[property.ordinal()];
+			APP_ARGS.put(property, Config.getProperty(configEntry.name, Object.class));
 		}
 	}
 
