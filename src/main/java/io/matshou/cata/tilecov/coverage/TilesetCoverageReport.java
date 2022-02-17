@@ -39,6 +39,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.io.CharSink;
 import com.google.common.io.Files;
 
+import io.matshou.cata.tilecov.Main;
 import io.matshou.cata.tilecov.tile.CataTileset;
 
 import static io.matshou.cata.tilecov.coverage.TilesetCoverage.CoverageStats;
@@ -221,10 +222,10 @@ public class TilesetCoverageReport {
 		else if (percent < 66) {
 			color = "blue";
 		}
-		String sPath = path.toString().replace('\\', '/');
+		String pathName = Main.getGameDirectory().relativize(path).toString().replace('\\', '/');
 		Element result = FLEX_ROW.shallowClone();
 
-		Element linkElement = cloneElement(INDENTED_TEXT, linkElement("file:///" + sPath, sPath));
+		Element linkElement = cloneElement(INDENTED_TEXT, linkElement("file:///" + path, pathName));
 		result.appendChild(new Element("div").appendChild(linkElement));
 
 		result.appendChild(new Element("div").text(String.valueOf(total)));

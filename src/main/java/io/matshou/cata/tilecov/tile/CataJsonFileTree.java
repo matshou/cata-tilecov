@@ -134,13 +134,16 @@ public class CataJsonFileTree extends TreeMap<Path, ImmutableSet<CataJsonObject>
 			// if path to file tree was /home/cata/data/json/
 			// and path to file was /home/cata/data/json/monsters/slugs.json
 			// then the relative path would be /monsters/slugs.json
-			Path relativePath = rootPath.relativize(jsonFile);
+			Path relativePath = root.relativize(jsonFile);
 
 			if (cataJsonObjects.isEmpty()) {
 				throw new NullJsonObjectException(CataJsonObject.class);
 			}
 			result.put(relativePath, ImmutableSet.copyOf(cataJsonObjects.get()));
+			allCataJsonObjects.addAll(cataJsonObjects.get());
 		}
+		// include target directory in the result so that users can have a better overview
+		result.put(target != null ? target : root, ImmutableSet.copyOf(allCataJsonObjects));
 		return result;
 	}
 
