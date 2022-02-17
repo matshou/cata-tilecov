@@ -28,17 +28,17 @@ import com.google.common.base.Splitter;
 
 public class Main {
 
-	private static final Map<Argument, Object> APP_ARGS = new HashMap<>();
+	static final Map<Argument, Object> APP_ARGS = new HashMap<>();
 	private static final Splitter SPLITTER = Splitter.on("=");
 
 	/**
 	 * Represents available application arguments.
 	 */
 	enum Argument {
-		GAME_DIRECTORY("gameDir", "GAME_DIR", false) {
+		GAME_DIRECTORY("gameDir", "GAME_DIR", true) {
 			@Override
 			Object getAsObject(String value) {
-				return Paths.get(value);
+				return Paths.get(!value.isEmpty() ? value : ".");
 			}
 
 			@Override
@@ -126,12 +126,17 @@ public class Main {
 			if (systemProp != null) {
 				appArgValue = systemProp;
 			}
-			if (!property.optional && (appArgValue == null || appArgValue.isEmpty())) {
+			else if (appArgValue == null) {
+				appArgValue = "";
+			}
+			if (!appArgValue.isEmpty()) {
+				// validate argument values before storing them to map
+				property.validate(appArgValue);
+			}
+			else if (!property.optional) {
 				String msg = "Missing non-optional application argument: %s(%s)";
 				throw new IllegalStateException(String.format(msg, property.appArgName, property.sysPropName));
 			}
-			// validate argument values before storing them to map
-			property.validate(appArgValue);
 			APP_ARGS.put(property, property.getAsObject(appArgValue));
 		}
 	}
