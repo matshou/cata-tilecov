@@ -109,19 +109,19 @@ public class CataJsonFileTree extends TreeMap<Path, ImmutableSet<CataJsonObject>
 		return true;
 	}
 
-	private static Map<Path, ImmutableSet<CataJsonObject>> init(Path rootPath, @Nullable Path targetPath)
-			throws IOException, NullJsonObjectException {
+	private static Map<Path, ImmutableSet<CataJsonObject>> init(Path root, @Nullable Path target) throws IOException {
 
-		File fileTreeDir = rootPath.toFile();
+		File fileTreeDir = root.toFile();
 		if (!fileTreeDir.exists()) {
-			throw new FileNotFoundException("Unable to find JSON directory: " + rootPath);
+			throw new FileNotFoundException("Unable to find JSON directory: " + root);
 		}
 		if (!fileTreeDir.isDirectory()) {
-			throw new IllegalArgumentException("Expected path to be directory: " + rootPath);
+			throw new IllegalArgumentException("Expected path to be directory: " + root);
 		}
+		Set<CataJsonObject> allCataJsonObjects = new HashSet<>();
 		Map<Path, ImmutableSet<CataJsonObject>> result = new HashMap<>();
-		for (Path jsonFile : Files.find(rootPath, 10, (p, bfa) ->
-				shouldInclude(rootPath.relativize(p), bfa, targetPath)).collect(Collectors.toSet())) {
+		for (Path jsonFile : Files.find(root, 10, (p, bfa) ->
+				shouldInclude(root.relativize(p), bfa, target)).collect(Collectors.toSet())) {
 
 			// deserialize the json file under found path
 			Optional<List<CataJsonObject>> cataJsonObjects = JsonObjectBuilder.<CataJsonObject>create()
