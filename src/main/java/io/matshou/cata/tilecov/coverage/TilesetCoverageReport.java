@@ -97,7 +97,7 @@ public class TilesetCoverageReport {
 			Element table = FLEX_TABLE.shallowClone();
 
 			// report table columns
-			Element tableColumns = FLEX_ROW.appendChildren(List.of(
+			Element tableColumns = FLEX_ROW.shallowClone().appendChildren(List.of(
 					cloneElement(FLEX_COLUMN, INDENTED_TEXT.shallowClone().text("Files")),
 					cloneElement(FLEX_COLUMN, imageElement("assets/total.png", "total", 25)),
 					cloneElement(FLEX_COLUMN, imageElement("assets/eye.png", "looks-like", 25)),
