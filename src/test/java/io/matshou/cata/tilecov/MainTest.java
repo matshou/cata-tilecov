@@ -35,6 +35,14 @@ public class MainTest {
 		return result;
 	}
 
+	public static void setGameDirectory(Path path) {
+		Main.APP_ARGS.put(Main.Argument.GAME_DIRECTORY, path);
+	}
+
+	public static void clearGameDirectory() {
+		Main.APP_ARGS.remove(Main.Argument.GAME_DIRECTORY);
+	}
+
 	@Test
 	void shouldThrowExceptionWhenMissingNonOptionalArguments() {
 

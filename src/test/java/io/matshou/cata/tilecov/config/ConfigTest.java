@@ -28,6 +28,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.CharSink;
+import com.google.common.io.FileWriteMode;
 import com.google.common.io.Files;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -77,11 +78,11 @@ public class ConfigTest {
 	void shouldThrowExceptionWhenNonOptionalPropertyEmpty(@TempDir Path tempDir) throws IOException {
 
 		File configFile = createConfigFile(tempDir);
-		CharSink sink = Files.asCharSink(configFile, Charset.defaultCharset());
+		CharSink sink = Files.asCharSink(configFile, Charset.defaultCharset(), FileWriteMode.APPEND);
 
 		for (Config.Entry entry : Config.Entry.values()) {
 			if (!entry.optional) {
-				sink.write(entry.name + '=');
+				sink.write(entry.name + '=' + '\n');
 			}
 		}
 		assertThrows(IllegalConfigPropertyException.class, () -> Config.initialize(tempDir));
@@ -91,12 +92,13 @@ public class ConfigTest {
 	void shouldThrowExceptionWhenGameDirectoryNotExist(@TempDir Path tempDir) throws IOException {
 
 		File configFile = createConfigFile(tempDir);
-		CharSink sink = Files.asCharSink(configFile, Charset.defaultCharset());
+		CharSink sink = Files.asCharSink(configFile, Charset.defaultCharset(), FileWriteMode.APPEND);
 
 		Path wrongPath = tempDir.resolve("pseudo/path");
 		assertFalse(wrongPath.toFile().exists());
 
-		sink.write(Config.Entry.GAME_DIR.name + '=' + wrongPath);
+		sink.write(Config.Entry.GAME_DIR.name + '=' + wrongPath + '\n');
+		sink.write(Config.Entry.OUTPUT_DIR.name + '=' + "reports" + '\n');
 		assertThrows(IllegalConfigPropertyException.class, () -> Config.initialize(tempDir));
 	}
 
@@ -104,12 +106,13 @@ public class ConfigTest {
 	void shouldThrowExceptionWhenGameDirectoryNotDirectory(@TempDir Path tempDir) throws IOException {
 
 		File configFile = createConfigFile(tempDir);
-		CharSink sink = Files.asCharSink(configFile, Charset.defaultCharset());
+		CharSink sink = Files.asCharSink(configFile, Charset.defaultCharset(), FileWriteMode.APPEND);
 
 		Path notDirectory = tempDir.resolve(".file");
 		assertTrue(notDirectory.toFile().createNewFile());
 
-		sink.write(Config.Entry.GAME_DIR.name + '=' + notDirectory);
+		sink.write(Config.Entry.GAME_DIR.name + '=' + notDirectory + '\n');
+		sink.write(Config.Entry.OUTPUT_DIR.name + '=' + "reports" + '\n');
 		assertThrows(IllegalConfigPropertyException.class, () -> Config.initialize(tempDir));
 	}
 

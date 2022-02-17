@@ -62,7 +62,21 @@ public class Config {
 				throw new IllegalConfigPropertyException("GAME_DIR", String.format(message, p));
 			}
 			return gameDir;
-		}, "Path to Cataclysm game directory", false);
+		}, "Path to Cataclysm game directory", false),
+		/**
+		 * Path to coverage report output directory.
+		 * <p>
+		 * This property has to point to a non-existing file or an existing directory.
+		 */
+		OUTPUT_DIR("OUTPUT_DIR", "reports", p ->
+		{
+			Path outputDir = Paths.get(p);
+			if (java.nio.file.Files.isRegularFile(outputDir)) {
+				String message = "path is not a directory (%s)";
+				throw new IllegalConfigPropertyException("OUTPUT_DIR", String.format(message, p));
+			}
+			return outputDir.toFile();
+		}, "Path to coverage report output directory", false);
 
 		final String name;
 		final String defaultValue;

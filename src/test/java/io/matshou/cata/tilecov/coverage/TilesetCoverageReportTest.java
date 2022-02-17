@@ -27,16 +27,20 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.google.gson.reflect.TypeToken;
 
+import io.matshou.cata.tilecov.MainTest;
 import io.matshou.cata.tilecov.UnitTestResources;
 import io.matshou.cata.tilecov.json.CataJsonDeserializer;
 import io.matshou.cata.tilecov.json.CataJsonObject;
 import io.matshou.cata.tilecov.json.JsonObjectBuilder;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TilesetCoverageReportTest extends UnitTestResources {
 
 	private TilesetCoverage tilesetCoverage;
@@ -70,9 +74,14 @@ public class TilesetCoverageReportTest extends UnitTestResources {
 	@Test
 	void shouldGenerateTilesetCoverageReportToOutputDirectory(@TempDir Path tempDir) throws IOException {
 
+		MainTest.setGameDirectory(Paths.get("."));
 		new TilesetCoverageReport(Set.of(tilesetCoverage)).writeToFile(tempDir);
 
 		Assertions.assertTrue(tempDir.resolve("coverage.css").toFile().exists());
 		Assertions.assertTrue(tempDir.resolve("coverage.html").toFile().exists());
+
+		// clear game directory property since it is in a static declaration,
+		// and it will interfere with other tests if we don't clear it
+		MainTest.clearGameDirectory();
 	}
 }
