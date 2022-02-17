@@ -50,6 +50,11 @@ public class Config {
 
 	enum Entry {
 
+		/**
+		 * Path to Cataclysm game directory.
+		 * <p>
+		 * This property has to point to an existing directory.
+		 */
 		GAME_DIR("GAME_DIR", ".", p ->
 		{
 			File gameDir = Paths.get(p).toFile();
