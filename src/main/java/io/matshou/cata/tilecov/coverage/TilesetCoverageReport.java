@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -57,6 +58,9 @@ public class TilesetCoverageReport {
 	private static final Element FLEX_COLUMN = divWithAttributes(Map.of("class", "flex-column"));
 	private static final Element INDENTED_TEXT = divWithAttributes(Map.of("class", "indented-text"));
 
+	private static final Path[] CSS_FILE_PATHS = {
+			Paths.get("css/main.css"), Paths.get("css/table.css")
+	};
 	private final Map<TilesetCoverage, Document> coverageReports = new HashMap<>();
 
 	/**
@@ -67,17 +71,24 @@ public class TilesetCoverageReport {
 	 * @param tilesetCoverage {@code Set} of tileset coverage to generate reports for.
 	 */
 	public TilesetCoverageReport(Set<TilesetCoverage> tilesetCoverage) {
+
 		Document htmlDocument = Jsoup.parse("<html lang=\"en\">");
+		String title = "Cataclysm Tileset Coverage Report";
 
-		// HTML head element
-		Element head = htmlDocument.head();
+		// create HTML header and append to document
+		appendHtmlHeader(htmlDocument, title);
 
-		Attributes linkAttributes = new Attributes();
-		linkAttributes.put("rel", "stylesheet");
-		linkAttributes.put("href", "coverage.css");
+		// HTML body element
+		Element body = htmlDocument.body();
 
-		head.appendChild(new Element(Tag.valueOf("link"), null, linkAttributes));
-		head.appendChild(new Element("title").text("Cataclysm Tileset Coverage Report"));
+		body.appendChild(new Element("h1").text(title));
+		body.appendChild(new Element("hr"));
+
+		String intro = "This document contains information about currently installed Cataclysm tilesets.";
+		body.appendChild(new Element("p").text(intro));
+
+		body.appendChild(new Element("h2").text("Table of Content"));
+		body.appendChild(new Element("hr"));
 
 		tilesetCoverage.forEach(this::createCoverageReport);
 	}
@@ -85,19 +96,10 @@ public class TilesetCoverageReport {
 	private void createCoverageReport(TilesetCoverage coverage) {
 
 		Document htmlDocument = Jsoup.parse("<html lang=\"en\">");
-
-		Attributes linkAttributes = new Attributes();
-		linkAttributes.put("rel", "stylesheet");
-		linkAttributes.put("href", "coverage.css");
-
-		// tileset display name
 		String tilesetName = coverage.getTileset().getDisplayName();
 
-		// HTML head element
-		Element head = htmlDocument.head();
-
-		head.appendChild(new Element(Tag.valueOf("link"), null, linkAttributes));
-		head.appendChild(new Element("title").text(tilesetName + " - Tileset Coverage Report"));
+		// create HTML header and append to document
+		appendHtmlHeader(htmlDocument, tilesetName + " - Tileset Coverage Report");
 
 		// HTML body element
 		Element body = htmlDocument.body();
@@ -146,9 +148,10 @@ public class TilesetCoverageReport {
 	 */
 	public void writeToFile(Path outputDir) throws IOException {
 
-		// coverage CSS file
-		copyFileFromJar("coverage.css", outputDir);
-
+		// coverage CSS files
+		for (Path cssFilePath : CSS_FILE_PATHS) {
+			copyFileFromJar(cssFilePath.toString(), outputDir);
+		}
 		// copy all HTML asset files
 		String[] assetFilePaths = { "eye.png", "total.png", "x.png" };
 		for (String assetFilePath : assetFilePaths) {
@@ -161,6 +164,21 @@ public class TilesetCoverageReport {
 		}
 	}
 
+	private static void appendHtmlHeader(Document document, String title) {
+
+		// HTML head element
+		Element head = document.head();
+
+		for (Path cssFilePath : CSS_FILE_PATHS) {
+			Attributes linkAttributes = new Attributes();
+			linkAttributes.put("rel", "stylesheet");
+			linkAttributes.put("href", cssFilePath.toString());
+
+			head.appendChild(new Element(Tag.valueOf("link"), null, linkAttributes));
+		}
+		head.appendChild(new Element("title").text(title));
+	}
+
 	/**
 	 * Copy file from application jar to specified output directory.
 	 * <p>
@@ -171,7 +189,7 @@ public class TilesetCoverageReport {
 	 *
 	 * @throws IOException when an I/O exception occurred while copying file.
 	 */
-	private void copyFileFromJar(String filePath, Path outputDir) throws IOException {
+	private static void copyFileFromJar(String filePath, Path outputDir) throws IOException {
 
 		InputStream stream = TilesetCoverageReport.class.getResourceAsStream('/' + filePath);
 		if (stream == null) {
