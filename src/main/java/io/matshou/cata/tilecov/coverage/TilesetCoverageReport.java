@@ -24,10 +24,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attributes;
@@ -36,11 +33,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.io.CharSink;
 import com.google.common.io.Files;
 
 import io.matshou.cata.tilecov.Main;
-import io.matshou.cata.tilecov.tile.CataTileset;
 
 import static io.matshou.cata.tilecov.coverage.TilesetCoverage.CoverageStats;
 import static io.matshou.cata.tilecov.coverage.TilesetCoverage.CoverageType;
@@ -62,62 +57,79 @@ public class TilesetCoverageReport {
 	private static final Element FLEX_COLUMN = divWithAttributes(Map.of("class", "flex-column"));
 	private static final Element INDENTED_TEXT = divWithAttributes(Map.of("class", "indented-text"));
 
-	private final Document htmlDocument = Jsoup.parse("<html lang=\"en\">");
+	private final Map<TilesetCoverage, Document> coverageReports = new HashMap<>();
 
 	/**
-	 * Create a new coverage report for given {@code Set} of tileset coverages.
-	 * The constructor will create an HTML document object that will contain statistical
-	 * reports for every tileset. To write the document to file call {@link #writeToFile(Path).}
+	 * Create coverage reports for given {@code Set} of tileset coverages.
+	 * The constructor will create HTML document objects that will contain statistical
+	 * reports for every tileset. To write the documents to file call {@link #writeToFile(Path).}
 	 *
-	 * @param tilesetCoverage {@code Set} of tileset coverage to include in the report.
+	 * @param tilesetCoverage {@code Set} of tileset coverage to generate reports for.
 	 */
 	public TilesetCoverageReport(Set<TilesetCoverage> tilesetCoverage) {
+		Document htmlDocument = Jsoup.parse("<html lang=\"en\">");
+
+		// HTML head element
+		Element head = htmlDocument.head();
 
 		Attributes linkAttributes = new Attributes();
 		linkAttributes.put("rel", "stylesheet");
 		linkAttributes.put("href", "coverage.css");
 
+		head.appendChild(new Element(Tag.valueOf("link"), null, linkAttributes));
+		head.appendChild(new Element("title").text("Cataclysm Tileset Coverage Report"));
+
+		tilesetCoverage.forEach(this::createCoverageReport);
+	}
+
+	private void createCoverageReport(TilesetCoverage coverage) {
+		Document htmlDocument = Jsoup.parse("<html lang=\"en\">");
+
+		Attributes linkAttributes = new Attributes();
+		linkAttributes.put("rel", "stylesheet");
+		linkAttributes.put("href", "coverage.css");
+
+		// tileset display name
+		String tilesetName = coverage.getTileset().getDisplayName();
+
 		// HTML head element
 		Element head = htmlDocument.head();
 
 		head.appendChild(new Element(Tag.valueOf("link"), null, linkAttributes));
-		head.appendChild(new Element("title").text("Cataclysm Tileset Coverage Report"));
+		head.appendChild(new Element("title").text(tilesetName + " - Tileset Coverage Report"));
 
 		// HTML body element
 		Element body = htmlDocument.body();
 
-		body.appendChild(new Element("h1").text("Cataclysm Tileset Coverage Report"));
+		body.appendChild(new Element("h1").text(tilesetName));
 		body.appendChild(new Element("hr"));
 
-		for (TilesetCoverage coverage : tilesetCoverage) {
-			// tileset display name
-			CataTileset tileset = coverage.getTileset();
-			body.appendChild(new Element("h2").text(tileset.getDisplayName()));
+		// table that will contain report data for tileset
+		Element table = FLEX_TABLE.shallowClone();
 
-			// table that will contain report data for tileset
-			Element table = FLEX_TABLE.shallowClone();
+		// report table columns
+		Element tableColumns = FLEX_ROW.shallowClone().appendChildren(List.of(
+				cloneElement(FLEX_COLUMN, INDENTED_TEXT.shallowClone().text("Files")),
+				cloneElement(FLEX_COLUMN, imageElement("assets/total.png", "total", 25)),
+				cloneElement(FLEX_COLUMN, imageElement("assets/eye.png", "looks-like", 25)),
+				cloneElement(FLEX_COLUMN, imageElement("assets/x.png", "no-coverage", 25)),
+				cloneElement(FLEX_COLUMN, INDENTED_TEXT.shallowClone().text("Coverage"))
+		));
+		table.appendChild(tableColumns);
 
-			// report table columns
-			Element tableColumns = FLEX_ROW.shallowClone().appendChildren(List.of(
-					cloneElement(FLEX_COLUMN, INDENTED_TEXT.shallowClone().text("Files")),
-					cloneElement(FLEX_COLUMN, imageElement("assets/total.png", "total", 25)),
-					cloneElement(FLEX_COLUMN, imageElement("assets/eye.png", "looks-like", 25)),
-					cloneElement(FLEX_COLUMN, imageElement("assets/x.png", "no-coverage", 25)),
-					cloneElement(FLEX_COLUMN, INDENTED_TEXT.shallowClone().text("Coverage"))
+		for (Map.Entry<Path, ImmutableMap<String, CoverageType>> entry : coverage.data.entrySet()) {
+			CoverageStats coverageStats = Objects.requireNonNull(coverage.stats.get(entry.getKey()));
+			table.appendChild(getReportTableRow(entry.getKey(),
+					coverageStats.getObjectsTotal(),
+					coverageStats.getUniqueCoverageTotal(),
+					coverageStats.getInheritedTotal(),
+					coverageStats.getNoCoverageTotal()
 			));
-			table.appendChild(tableColumns);
-
-			for (Map.Entry<Path, ImmutableMap<String, CoverageType>> entry : coverage.data.entrySet()) {
-				CoverageStats coverageStats = Objects.requireNonNull(coverage.stats.get(entry.getKey()));
-				table.appendChild(getReportTableRow(entry.getKey(),
-						coverageStats.getObjectsTotal(),
-						coverageStats.getUniqueCoverageTotal(),
-						coverageStats.getInheritedTotal(),
-						coverageStats.getNoCoverageTotal()
-				));
-			}
-			body.appendChild(table);
 		}
+		body.appendChild(table);
+
+		// map the document to tileset coverage instance
+		coverageReports.put(coverage, htmlDocument);
 	}
 
 	/**
@@ -141,10 +153,11 @@ public class TilesetCoverageReport {
 		for (String assetFilePath : assetFilePaths) {
 			copyFileFromJar("assets/" + assetFilePath, outputDir);
 		}
-		// write coverage report HTML to file
-		File coverageReportFile = outputDir.resolve("coverage.html").toFile();
-		CharSink charSink = Files.asCharSink(coverageReportFile, Charset.defaultCharset());
-		charSink.write(htmlDocument.outerHtml());
+		// write coverage report HTML documents to file
+		for (Map.Entry<TilesetCoverage, Document> entry : coverageReports.entrySet()) {
+			Path htmlPath = outputDir.resolve(entry.getKey().getTileset().getName() + ".html");
+			Files.asCharSink(htmlPath.toFile(), Charset.defaultCharset()).write(entry.getValue().outerHtml());
+		}
 	}
 
 	/**
