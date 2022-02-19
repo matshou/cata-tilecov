@@ -21,6 +21,7 @@ hr {
     display: flex;
     flex-direction: column;
     border: 1px solid var(--grey);
+    font-size: 15px;
 }
 
 .flex-row {
