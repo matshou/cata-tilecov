@@ -83,6 +83,7 @@ public class TilesetCoverageReport {
 	}
 
 	private void createCoverageReport(TilesetCoverage coverage) {
+
 		Document htmlDocument = Jsoup.parse("<html lang=\"en\">");
 
 		Attributes linkAttributes = new Attributes();
@@ -105,7 +106,7 @@ public class TilesetCoverageReport {
 		body.appendChild(new Element("hr"));
 
 		// table that will contain report data for tileset
-		Element table = FLEX_TABLE.shallowClone();
+		Element table = FLEX_TABLE.shallowClone().addClass("tilecov2");
 
 		// report table columns
 		Element tableColumns = FLEX_ROW.shallowClone().appendChildren(List.of(

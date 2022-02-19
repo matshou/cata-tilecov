@@ -43,32 +43,32 @@ hr {
     padding-left: 15px;
 }
 
-.flex-row div:nth-child(1) {
+.tilecov2 .flex-row div:nth-child(1) {
     flex: 0 0 50%;
 }
 
-.flex-row div:nth-child(n+2):nth-child(-n+4) {
+.tilecov2 .flex-row div:nth-child(n+2):nth-child(-n+4) {
     align-items: center;
     justify-content: center;
     flex: 0 0 8%;
     padding: 0;
 }
 
-.flex-row div:nth-child(5) {
+.tilecov2 .flex-row div:nth-child(5) {
     text-align: right;
     flex-grow: 2;
 }
 
-.flex-row div:nth-child(5) .indented-text {
+.tilecov2 .flex-row div:nth-child(5) .indented-text {
     padding-left: 15px;
 }
 
-.flex-row .flex-column:nth-child(5) {
+.tilecov2 .flex-row .flex-column:nth-child(5) {
     justify-content: flex-start;
     padding: 20px 0 20px 0;
 }
 
-.flex-row div:nth-child(5) {
+.tilecov2 .flex-row div:nth-child(5) {
     position: relative;
     padding: 0;
 }
