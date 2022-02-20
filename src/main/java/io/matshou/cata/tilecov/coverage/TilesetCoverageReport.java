@@ -108,7 +108,7 @@ public class TilesetCoverageReport {
 		body.appendChild(new Element("hr"));
 
 		// table that will contain report data for tileset
-		Element table = FLEX_TABLE.shallowClone().addClass("tilecov2");
+		Element table = FLEX_TABLE.shallowClone().addClass("coverage").addClass("wide");
 
 		// report table columns
 		Element tableColumns = FLEX_ROW.shallowClone().appendChildren(List.of(

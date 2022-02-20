@@ -37,11 +37,6 @@ th {
     display: inherit;
 }
 
-.flex-column {
-    background-color: var(--light-blue);
-    font-weight: 700;
-}
-
 .flex-row > div {
     display: inherit;
     border: 1px solid var(--grey);
@@ -52,32 +47,37 @@ th {
     padding-left: 15px;
 }
 
-.tilecov2 .flex-row div:nth-child(1) {
+.coverage .flex-column {
+    background-color: var(--light-blue);
+    font-weight: 700;
+}
+
+.coverage.wide .flex-row div:nth-child(1) {
     flex: 0 0 50%;
 }
 
-.tilecov2 .flex-row div:nth-child(n+2):nth-child(-n+4) {
+.coverage.wide .flex-row div:nth-child(n+2):nth-child(-n+4) {
     align-items: center;
     justify-content: center;
     flex: 0 0 8%;
     padding: 0;
 }
 
-.tilecov2 .flex-row div:nth-child(5) {
+.coverage.wide .flex-row div:nth-child(5) {
     text-align: right;
     flex-grow: 2;
 }
 
-.tilecov2 .flex-row div:nth-child(5) .indented-text {
+.coverage.wide .flex-row div:nth-child(5) .indented-text {
     padding-left: 15px;
 }
 
-.tilecov2 .flex-row .flex-column:nth-child(5) {
+.coverage.wide .flex-row .flex-column:nth-child(5) {
     justify-content: flex-start;
     padding: 20px 0 20px 0;
 }
 
-.tilecov2 .flex-row div:nth-child(5) {
+.coverage.wide .flex-row div:nth-child(5) {
     position: relative;
     padding: 0;
 }
