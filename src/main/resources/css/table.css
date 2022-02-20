@@ -56,6 +56,10 @@ th {
     flex: 0 0 50%;
 }
 
+.indented-text {
+    flex: 0 0 100% !important
+}
+
 .coverage.wide .flex-row div:nth-child(n+2):nth-child(-n+4) {
     align-items: center;
     justify-content: center;
@@ -70,6 +74,7 @@ th {
 
 .coverage.wide .flex-row div:nth-child(5) .indented-text {
     padding-left: 15px;
+    flex: 0 0 50% !important
 }
 
 .coverage.wide .flex-row .flex-column:nth-child(5) {
